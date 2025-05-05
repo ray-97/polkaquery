@@ -1,0 +1,115 @@
+# --- Environment Variables ---
+# Ignore the file containing sensitive information like API keys
+.env
+
+# --- Virtual Environments ---
+# Standard venv/pipenv/uv directory names
+venv/
+.venv/
+env/
+ENV/
+# Conda environments (less common for web apps but good to include)
+conda/
+.conda/
+# Virtualenvwrapper
+.env*/
+
+# --- Python Artifacts ---
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+# Usually ignored by users, but sometimes accidentally committed.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+pytestdebug.log
+
+# --- IDE / Editor / OS Files ---
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# macOS
+.DS_Store
+._*
+
+# Windows thumbnail cache
+Thumbs.db
+ehthumbs.db
+
+# --- Type Checker ---
+# Mypy cache
+.mypy_cache/
+
+# pyright cache
+.pyright_cache/
+
+# pytype
+.pytype/
+
+# --- Linters ---
+# Ruff cache
+.ruff_cache/
+
+# --- Other ---
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.swp
+*~
