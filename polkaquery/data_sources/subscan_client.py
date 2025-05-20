@@ -1,65 +1,95 @@
 # Polkaquery
-# Copyright (C) 2025 Polkaquery_Team
-
+# Copyright (C) 2025 Ray
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# subscan_client.py
 import httpx
 from fastapi import HTTPException
+import json
+import pathlib
+import glob # For finding all .json files in a directory
 
-# todo: find exact Subscan API v2 endpoints and their request/response structures for these intents
+# --- Load Tool Definitions to get API paths/methods ---
+TOOLS_MAP = {}
+# Path to the directory containing individual tool JSON files.
+# This assumes subscan_client.py is in polkaquery/data_sources/
+# and polkaquery_tool_definitions/ is in the project root.
+TOOLS_DIR_PATH_CLIENT = pathlib.Path(__file__).resolve().parent.parent.parent / "polkaquery_tool_definitions"
 
-async def call_subscan_api(client: httpx.AsyncClient, base_url: str, intent: str, params: dict, api_key: str | None) -> dict:
+if TOOLS_DIR_PATH_CLIENT.is_dir():
+    for tool_file_path in glob.glob(str(TOOLS_DIR_PATH_CLIENT / "*.json")):
+        try:
+            with open(tool_file_path, 'r') as f:
+                tool_definition = json.load(f)
+                tool_name = tool_definition.get("name")
+                if tool_name:
+                    TOOLS_MAP[tool_name] = tool_definition
+                else:
+                    print(f"Warning: Tool definition in {tool_file_path} is missing a 'name'.")
+        except json.JSONDecodeError:
+            print(f"Warning: Error decoding JSON from tool file for client: {tool_file_path}")
+        except Exception as e:
+            print(f"Warning: Error loading tool file for client {tool_file_path}: {e}")
+    print(f"Subscan client loaded {len(TOOLS_MAP)} tools into TOOLS_MAP from: {TOOLS_DIR_PATH_CLIENT}")
+else:
+    print(f"Warning: Tools directory not found for Subscan client at {TOOLS_DIR_PATH_CLIENT}. API calls via tool name will fail.")
+# --- End Load Tool Definitions ---
+
+
+async def call_subscan_api(client: httpx.AsyncClient, base_url: str, intent_tool_name: str, params: dict, api_key: str | None) -> dict:
     """
-    Calls the appropriate Subscan API endpoint based on the intent.
+    Calls the appropriate Subscan API endpoint based on the intent_tool_name,
+    using API path and method from loaded tool definitions.
     """
     headers = {"Content-Type": "application/json"}
     if api_key:
         headers["X-API-Key"] = api_key
     else:
-        print("Warning: Subscan API key not provided for call_subscan_api.")
+        print("Warning: Subscan API key not provided for call_subscan_api (tool mode).")
 
-    api_path = ""
-    request_body = None
-    method = "POST"
+    tool_definition = TOOLS_MAP.get(intent_tool_name)
+    if not tool_definition:
+        raise HTTPException(status_code=400, detail=f"Unknown intent/tool name '{intent_tool_name}' provided to Subscan client. Available: {list(TOOLS_MAP.keys())}")
 
-    if intent == "get_balance":
-        address = params.get("address")
-        if not address:
-             raise HTTPException(status_code=400, detail="Missing address parameter for get_balance intent.")
-        api_path = "/api/v2/scan/accounts"
-        request_body = {"address": address}
-    elif intent == "get_extrinsic":
-        extrinsic_hash = params.get("hash")
-        if not extrinsic_hash:
-            raise HTTPException(status_code=400, detail="Missing hash parameter for get_extrinsic intent.")
-        api_path = "/api/scan/extrinsic"
-        request_body = {"hash": extrinsic_hash}
-    elif intent == "get_latest_block":
-        api_path = "/api/scan/blocks"
-        request_body = {"page": 0, "row": 1}
-    else:
-        raise HTTPException(status_code=400, detail=f"Intent '{intent}' is not supported by the Subscan client.")
+    api_path = tool_definition.get("api_path")
+    api_method = tool_definition.get("api_method", "POST").upper() 
+
+    if not api_path:
+        raise HTTPException(status_code=500, detail=f"API path not defined for tool '{intent_tool_name}'.")
+
+    request_body = {}
+    tool_param_schema = tool_definition.get("parameters", {}).get("properties", {})
+    
+    for param_name, param_details in tool_param_schema.items():
+        if param_name in params:
+            request_body[param_name] = params[param_name]
+        elif "default" in param_details: # Use default if param not provided by LLM but defined in schema
+            request_body[param_name] = param_details["default"]
+        # If a required param (by schema) is missing here, it implies LLM failed to extract it,
+        # but gemini_recognizer should have caught it. Or it's optional without default.
 
     url = f"{base_url}{api_path}"
-    print(f"Calling Subscan API: {method} {url} Body: {request_body}")
+    # print(f"DEBUG: Calling Subscan API (Tool Mode): {api_method} {url} Body: {json.dumps(request_body)}")
 
     try:
-        if method == "POST":
+        if api_method == "POST":
              response = await client.post(url, headers=headers, json=request_body)
-        else: # GET
-             response = await client.get(url, headers=headers) # Add params=request_body if GET uses query params
+        elif api_method == "GET":
+             # For GET, parameters are typically URL query params, not a JSON body
+             response = await client.get(url, headers=headers, params=request_body) 
+        else:
+            raise HTTPException(status_code=500, detail=f"Unsupported API method '{api_method}' for tool '{intent_tool_name}'.")
 
         response.raise_for_status()
         data = response.json()
@@ -69,9 +99,9 @@ async def call_subscan_api(client: httpx.AsyncClient, base_url: str, intent: str
              print(f"Subscan API returned error code {data.get('code')}: {error_message}")
              raise HTTPException(status_code=400, detail=f"Subscan API Error: {error_message}")
 
-        print(f"Subscan API Response Code: {data.get('code')}")
+        # print(f"DEBUG: Subscan API Response Code (Tool Mode): {data.get('code')}")
         return data
     except httpx.RequestError as e:
-        print(f"Network error calling {url}: {e}")
-        raise HTTPException(status_code=503, detail=f"Network error calling Subscan API: {e}")
-    # HTTPStatusError will be propagated and caught by the main handler
+        print(f"Network error calling {url} (Tool Mode): {e}")
+        raise HTTPException(status_code=503, detail=f"Network error calling Subscan API (Tool Mode): {e}")
+

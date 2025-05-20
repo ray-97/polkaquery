@@ -1,136 +1,179 @@
 # Polkaquery
-# Copyright (C) 2025 Polkaquery_Team
-
+# Copyright (C) 2025 Ray
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from fastapi import HTTPException # Keep if used directly, otherwise can be removed if errors are raised elsewhere
 import datetime # For timestamp conversion
+import json     # For handling raw data snippets
 
 def format_planck(value_str: str | None, decimals: int) -> str:
-    """
-    Helper function to convert Planck units (string) to token units (string).
-    Handles potential None input, large numbers, and non-digit strings.
-    """
+    """Helper function to convert Planck units (string) to token units (string)."""
     if value_str is None or not value_str.isdigit():
         return "N/A"
     try:
-        if decimals <= 0:
-             return value_str # Treat as indivisible if decimals is 0 or less
-
+        if decimals <= 0: return value_str
         value_int = int(value_str)
         divisor = 10**decimals
         float_value = value_int / divisor
-
-        # Format with commas and appropriate decimal places, remove trailing zeros
         formatted = f"{float_value:,.{decimals}f}".rstrip('0').rstrip('.')
         return formatted if formatted else "0"
-    except (ValueError, TypeError) as e:
-         print(f"Error formatting planck value '{value_str}' with decimals {decimals}: {e}")
-         return "Invalid Format"
+    except (ValueError, TypeError):
+        return "Invalid Planck Value"
 
+def format_timestamp(unix_timestamp: int | None) -> str:
+    """Formats a Unix timestamp into a human-readable ISO-like string."""
+    if unix_timestamp is None:
+        return "N/A"
+    try:
+        # Using ISO format is often good for LLMs to parse if needed,
+        # but a more human-friendly one is also fine.
+        return datetime.datetime.fromtimestamp(unix_timestamp).strftime('%Y-%m-%d %H:%M:%S UTC')
+    except (ValueError, TypeError):
+        return "Invalid Timestamp"
 
-def format_response(intent: str, subscan_data: dict, network_name: str, decimals: int, symbol: str, params: dict = None) -> str:
+def format_response_for_llm(intent_tool_name: str, subscan_data: dict, network_name: str, decimals: int, symbol: str, original_params: dict = None) -> dict:
     """
-    Formats the raw JSON data from Subscan into a user-friendly string.
+    Pre-formats the raw JSON data from Subscan into a structured dictionary
+    intended to be used as input for a final LLM answer synthesis step.
 
     Args:
-        intent: The recognized intent.
+        intent_tool_name: The name of the tool/intent used.
         subscan_data: The raw JSON dictionary received from Subscan.
-        network_name: The name of the network queried (e.g., "polkadot").
+        network_name: The name of the network queried.
         decimals: The number of decimal places for the network's native token.
-        symbol: The symbol of the network's native token (e.g., "DOT").
-        params: Original parameters extracted from the query (e.g., for address).
+        symbol: The symbol of the network's native token.
+        original_params: Parameters extracted by the first LLM call, for context.
 
     Returns:
-        A formatted string summarizing the result.
+        A dictionary containing a summary and key extracted data.
     """
-    if params is None: # Ensure params is a dictionary
-        params = {}
+    if original_params is None: original_params = {}
+    output = {
+        "intent_processed": intent_tool_name,
+        "network": network_name,
+        "status": "success", # Assume success initially
+        "summary": "", # To be filled by specific handlers
+        "key_data": {}, # To be filled by specific handlers
+        "raw_data_snippet": None # Optionally include a snippet for LLM if needed
+    }
 
     try:
-        data = subscan_data.get("data")
-        if data is None:
-            if subscan_data.get("code") == 0:
-                 return f"Subscan reported success, but no specific data was found for the request on {network_name}."
-            else:
-                 return f"Received error code {subscan_data.get('code')} from Subscan on {network_name}: {subscan_data.get('message', 'Unknown error')}"
+        # Handle Subscan API level errors (code != 0)
+        if subscan_data.get("code") != 0:
+            output["status"] = "error"
+            output["summary"] = f"Subscan API reported an error for '{intent_tool_name}' on {network_name}."
+            output["key_data"] = {
+                "error_code": subscan_data.get("code"),
+                "error_message": subscan_data.get("message", "Unknown Subscan API error.")
+            }
+            return output
 
-        if intent == "get_balance":
+        data = subscan_data.get("data")
+        if data is None: # Successful call but no specific data returned
+            output["status"] = "nodata"
+            output["summary"] = f"No specific data was found by Subscan for '{intent_tool_name}' on {network_name} with parameters {original_params}."
+            # output["key_data"] = {"message": "No data returned by Subscan."} # Optional
+            return output
+
+        # --- Specific Handlers for known core intents ---
+        if intent_tool_name == "account_balance" or intent_tool_name == "general_get_balance": # Adjust if tool name differs
             account_info = data[0] if isinstance(data, list) and data else data if isinstance(data, dict) else None
             if account_info:
-                address = account_info.get("address", params.get("address", "N/A"))
-                total_balance_planck = account_info.get("balance")
-                available_balance_planck = account_info.get("available")
-                locked_balance_planck = account_info.get("locked")
-                reserved_balance_planck = account_info.get("reserved")
-
-                total_str = format_planck(total_balance_planck, decimals)
-                available_str = format_planck(available_balance_planck, decimals)
-                locked_str = format_planck(locked_balance_planck, decimals)
-                reserved_str = format_planck(reserved_balance_planck, decimals)
-
-                response_parts = [f"Account {address} on {network_name}:"]
-                if total_str != "N/A": response_parts.append(f"- Total Balance: {total_str} {symbol}")
-                if available_str != "N/A": response_parts.append(f"- Available: {available_str} {symbol}")
-                if locked_str != "N/A" and locked_str != "0": response_parts.append(f"- Locked: {locked_str} {symbol}")
-                if reserved_str != "N/A" and reserved_str != "0": response_parts.append(f"- Reserved: {reserved_str} {symbol}")
-
-                return "\n".join(response_parts) if len(response_parts) > 1 else f"Could not parse detailed balance information for {address} on {network_name} from Subscan response."
+                address = account_info.get("address", original_params.get("address", "N/A"))
+                output["summary"] = f"Balance information for account {address} on {network_name}."
+                output["key_data"] = {
+                    "address": address,
+                    "total_balance": f"{format_planck(account_info.get('balance'), decimals)} {symbol}",
+                    "available_balance": f"{format_planck(account_info.get('available'), decimals)} {symbol}",
+                    "locked_balance": f"{format_planck(account_info.get('locked'), decimals)} {symbol}",
+                    "reserved_balance": f"{format_planck(account_info.get('reserved'), decimals)} {symbol}",
+                }
             else:
-                 return f"Could not parse balance information for the requested address ({params.get('address', 'unknown')}) on {network_name}."
+                output["summary"] = f"Could not parse balance details for {original_params.get('address', 'the account')}."
+                output["status"] = "parse_error"
 
-        elif intent == "get_extrinsic":
-             extrinsic_hash = data.get("extrinsic_hash", params.get("hash", "N/A"))
-             block_num = data.get("block_num")
-             block_ts_unix = data.get("block_timestamp")
-             success = data.get("success")
-             module = data.get("call_module")
-             call = data.get("call_module_function")
-             fee_planck = data.get("fee")
-             signer = data.get("account_id")
-
-             status = "successful" if success else "failed" if success is not None else "status unknown"
-             fee_str = format_planck(fee_planck, decimals)
-             timestamp_str = datetime.datetime.fromtimestamp(block_ts_unix).strftime('%Y-%m-%d %H:%M:%S %Z') if block_ts_unix else "N/A"
-
-             response_parts = [f"Extrinsic {extrinsic_hash} on {network_name}:"]
-             if block_num is not None: response_parts.append(f"- Included in Block: {block_num} ({timestamp_str})")
-             if signer: response_parts.append(f"- Signer: {signer}")
-             if module and call: response_parts.append(f"- Call: {module}.{call}")
-             response_parts.append(f"- Status: {status}")
-             if fee_str != "N/A": response_parts.append(f"- Fee: {fee_str} {symbol}")
-             return "\n".join(response_parts)
-
-        elif intent == "get_latest_block":
+        elif intent_tool_name == "extrinsic_extrinsic_detail" or intent_tool_name == "general_get_extrinsic": # Adjust if tool name differs
+            extrinsic_hash = data.get("extrinsic_hash", original_params.get("hash", "N/A"))
+            output["summary"] = f"Details for extrinsic {extrinsic_hash} on {network_name}."
+            output["key_data"] = {
+                "hash": extrinsic_hash,
+                "block_number": data.get("block_num"),
+                "timestamp": format_timestamp(data.get("block_timestamp")),
+                "status": "successful" if data.get("success") else "failed" if data.get("success") is not None else "unknown",
+                "module_call": f"{data.get('call_module', '')}.{data.get('call_module_function', '')}",
+                "fee": f"{format_planck(data.get('fee'), decimals)} {symbol}",
+                "signer": data.get("account_id")
+            }
+        
+        elif intent_tool_name == "block_blocks_list" and original_params.get("row") == 1 and original_params.get("page",0) == 0 : # Heuristic for "get_latest_block"
+             # This assumes get_latest_block uses the blocks_list tool with row=1, page=0
             blocks_list = data.get("blocks")
             if isinstance(blocks_list, list) and len(blocks_list) > 0:
                 latest_block = blocks_list[0]
-                block_num = latest_block.get("block_num")
-                timestamp_unix = latest_block.get("block_timestamp")
-                extrinsics_count = latest_block.get("extrinsics_count")
-                events_count = latest_block.get("event_count")
-                validator = latest_block.get("validator_name") or latest_block.get("validator")
-
-                timestamp_str = datetime.datetime.fromtimestamp(timestamp_unix).strftime('%Y-%m-%d %H:%M:%S %Z') if timestamp_unix else "N/A"
-                response_parts = [f"Latest finalized block on {network_name} is #{block_num} ({timestamp_str})."]
-                if extrinsics_count is not None: response_parts.append(f"- Contained {extrinsics_count} extrinsics and {events_count} events.")
-                if validator: response_parts.append(f"- Produced by validator: {validator}")
-                return "\n".join(response_parts)
+                output["summary"] = f"Latest block information for {network_name}."
+                output["key_data"] = {
+                    "block_number": latest_block.get("block_num"),
+                    "timestamp": format_timestamp(latest_block.get("block_timestamp")),
+                    "extrinsics_count": latest_block.get("extrinsics_count"),
+                    "events_count": latest_block.get("event_count"),
+                    "validator": latest_block.get("validator_name") or latest_block.get("validator")
+                }
             else:
-                return f"Could not parse latest block information from Subscan response on {network_name}."
+                output["summary"] = "Could not parse latest block details."
+                output["status"] = "parse_error"
+
+        # --- Generic Handler for other tools/intents ---
+        # This part needs to be robust or have more specific handlers as you add tools
         else:
-            return f"Formatting not implemented for intent '{intent}' on {network_name} yet."
+            output["summary"] = f"Data received for '{intent_tool_name}' on {network_name}."
+            # For list-like data, provide a count and a sample
+            if isinstance(data, list):
+                output["key_data"]["count"] = len(data)
+                output["key_data"]["sample_items"] = data[:3] # First 3 items as sample
+                output["summary"] += f" Found {len(data)} items."
+            elif isinstance(data, dict):
+                # If it's a dictionary, check for common list patterns within it
+                list_keys = [k for k, v in data.items() if isinstance(v, list) and v] # Find keys with non-empty lists
+                if list_keys:
+                    # Heuristic: assume the first non-empty list is the primary data
+                    primary_list_key = list_keys[0]
+                    primary_list = data[primary_list_key]
+                    output["key_data"]["count"] = len(primary_list)
+                    output["key_data"][f"sample_{primary_list_key}"] = primary_list[:3]
+                    output["summary"] += f" Found {len(primary_list)} items under '{primary_list_key}'."
+                    # Include other top-level dict items if they are not too large
+                    other_data = {k:v for k,v in data.items() if k != primary_list_key and not isinstance(v, (list, dict))} # Simple values
+                    if other_data: output["key_data"]["other_details"] = other_data
+
+                else: # It's a dictionary without obvious lists, treat as detail object
+                    output["key_data"] = data # Include the whole data dict for now
+                    output["summary"] += " Retrieved detailed object."
+            else: # Primitive type or something unexpected
+                output["key_data"]["value"] = data
+            
+            # Optionally, add a snippet of raw data for the LLM if formatting is too generic
+            # raw_data_str = json.dumps(data)
+            # output["raw_data_snippet"] = raw_data_str[:500] + "..." if len(raw_data_str) > 500 else raw_data_str
+
+
     except Exception as e:
-        print(f"Error formatting response for intent {intent} on network {network_name}: {e}")
-        return f"Error processing the data received from Subscan for intent '{intent}' on {network_name}."
+        import traceback
+        print(f"Error in formatter for intent {intent_tool_name} on network {network_name}: {e}")
+        traceback.print_exc()
+        output["status"] = "error"
+        output["summary"] = f"An error occurred while formatting the data for '{intent_tool_name}'."
+        output["key_data"] = {"formatter_error": str(e)}
+        # output["raw_data_snippet"] = json.dumps(subscan_data)[:500] + "..." # Provide raw data on formatter error
+
+    return output

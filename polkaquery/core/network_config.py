@@ -1,5 +1,5 @@
 # Polkaquery
-# Copyright (C) 2025 Polkaquery_Team
+# Copyright (C) 2025 Ray
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
