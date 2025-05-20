@@ -1,6 +1,6 @@
 # tests/test_formatter.py
 import pytest
-from polkaquery.formatter import format_response, format_planck
+from polkaquery.core.formatter import format_response, format_planck
 
 # Use mock responses defined in test_subscan_client or define similar ones here
 # For simplicity, let's reuse the structures (assuming they are imported or redefined)

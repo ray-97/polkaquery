@@ -3,7 +3,7 @@ import pytest
 import httpx
 import respx  # For mocking httpx requests
 
-from polkaquery.subscan_client import call_subscan_api
+from polkaquery.data_sources.subscan_client import call_subscan_api
 from fastapi import HTTPException
 
 # Define constants for testing

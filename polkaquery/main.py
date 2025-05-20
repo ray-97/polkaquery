@@ -19,40 +19,60 @@ import os
 from fastapi import FastAPI, HTTPException, Body
 from dotenv import load_dotenv
 import httpx
+import google.generativeai as genai
+
+from polkaquery.intent_recognizer import recognize_intent
+from polkaquery.data_sources.subscan_client import call_subscan_api
+from polkaquery.core.formatter import format_response
 
 # Load environment variables (e.g., for API keys)
 load_dotenv()
 SUBSCAN_API_KEY = os.getenv("SUBSCAN_API_KEY")
 
-# Import our custom modules
-from polkaquery.intent_recognizer import recognize_intent
-from polkaquery.subscan_client import call_subscan_api
-from polkaquery.formatter import format_response
+# --- Network Configuration ---
+# Map user-friendly names to Subscan base URLs and token decimals
+# Add more networks as needed, verifying their base URLs and decimals
+SUPPORTED_NETWORKS = {
+    "polkadot": {"base_url": "https://polkadot.api.subscan.io", "decimals": 10, "symbol": "DOT"},
+    # "kusama": {"base_url": "https://kusama.api.subscan.io", "decimals": 12, "symbol": "KSM"},
+    # "westend": {"base_url": "https://westend.api.subscan.io", "decimals": 12, "symbol": "WND"},
+    # Add parachains like Acala, Moonbeam, etc.
+    # "acala": {"base_url": "https://acala.api.subscan.io", "decimals": 12, "symbol": "ACA"},
+}
+DEFAULT_NETWORK = "polkadot"
+# --- End Network Configuration ---
 
 app = FastAPI(
     title="Polkaquery",
     description="A Web3 search engine for the Polkadot ecosystem.",
-    version="0.1.0 (MVP)"
+    version="0.1.0"
 )
 
 # Create a single httpx client for reuse
-# todo: Consider adding timeout configurations
-http_client = httpx.AsyncClient()
+http_client = httpx.AsyncClient(timeout=20.0)
 
 @app.on_event("startup")
 async def startup_event():
-    # You can initialize resources here if needed
+    if not SUBSCAN_API_KEY:
+        print("Warning: SUBSCAN_API_KEY environment variable not set. Subscan API calls might fail.")
     pass
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    await http_client.aclose() # Close the client when app shuts down
+    await http_client.aclose()
+
 
 @app.post("/query/")
 async def handle_query(query_body: dict = Body(...)):
     """
     Accepts a natural language query about the Polkadot ecosystem
     and attempts to answer it.
+
+    Body format:
+    {
+        "query": "Your natural language query",
+        "network": "polkadot" (optional, defaults to 'polkadot')
+    }
     """
     raw_query = query_body.get("query")
     if not raw_query:
