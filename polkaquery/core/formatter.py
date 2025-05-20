@@ -133,6 +133,21 @@ def format_response_for_llm(intent_tool_name: str, subscan_data: dict, network_n
                 output["summary"] = "Could not parse latest block details."
                 output["status"] = "parse_error"
 
+        elif intent_tool_name == "internet_search":
+            search_results = data.get("results", []) # Assuming 'data' contains 'results' list from perform_internet_search
+            output["summary"] = f"Internet search results for query: '{data.get('query_used', original_params.get('search_query', 'N/A'))}'"
+            output["key_data"] = {
+                "search_provider": data.get("search_provider", "Unknown"),
+                "count": len(search_results),
+                "results_preview": [ # Extract key info from each search result
+                    {"title": res.get("title"), "url": res.get("url"), "snippet": res.get("content", "")[:200] + "..."} 
+                    for res in search_results[:3] # Show preview for first 3
+                ]
+            }
+            if not search_results:
+                output["summary"] = f"No results found by internet search for: '{data.get('query_used', original_params.get('search_query', 'N/A'))}'"
+                output["status"] = "nodata"
+
         # --- Generic Handler for other tools/intents ---
         # This part needs to be robust or have more specific handlers as you add tools
         else:

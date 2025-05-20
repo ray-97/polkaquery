@@ -20,10 +20,10 @@ Network configurations for Polkaquery.
 
 SUPPORTED_NETWORKS = {
     "polkadot": {"base_url": "https://polkadot.api.subscan.io", "decimals": 10, "symbol": "DOT"},
-    # "kusama": {"base_url": "https://kusama.api.subscan.io", "decimals": 12, "symbol": "KSM"},
-    # "westend": {"base_url": "https://westend.api.subscan.io", "decimals": 12, "symbol": "WND"},
-    # "statemint": {"base_url": "https://statemint.api.subscan.io", "decimals": 10, "symbol": "DOT"}, # AssetHub Polkadot
-    # "statemine": {"base_url": "https://statemine.api.subscan.io", "decimals": 12, "symbol": "KSM"}, # AssetHub Kusama
+    "kusama": {"base_url": "https://kusama.api.subscan.io", "decimals": 12, "symbol": "KSM"},
+    "westend": {"base_url": "https://westend.api.subscan.io", "decimals": 12, "symbol": "WND"},
+    "statemint": {"base_url": "https://statemint.api.subscan.io", "decimals": 10, "symbol": "DOT"}, # AssetHub Polkadot
+    "statemine": {"base_url": "https://statemine.api.subscan.io", "decimals": 12, "symbol": "KSM"}, # AssetHub Kusama
     # Add more networks as needed
 }
 DEFAULT_NETWORK = "polkadot"
