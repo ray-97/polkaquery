@@ -1,0 +1,12 @@
+{
+  "name": "governance_fellowship_referendum_tracks",
+  "description": "Fellowship referendum tracks",
+  "api_path": "/api/scan/fellowship/tracks",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Fellowship referendum tracks."
+}

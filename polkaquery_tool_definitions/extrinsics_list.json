@@ -1,0 +1,71 @@
+{
+  "name": "extrinsics_list",
+  "description": "Extrinsics list",
+  "api_path": "/api/v2/scan/extrinsics",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "after_id": {
+        "type": "integer",
+        "description": ""
+      },
+      "block_num": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "block_range": {
+        "type": "string",
+        "description": ""
+      },
+      "call": {
+        "type": "string",
+        "description": ""
+      },
+      "module": {
+        "type": "string",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "asc",
+          "desc"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "signed": {
+        "type": "string",
+        "description": ""
+      },
+      "success": {
+        "type": "boolean",
+        "description": ""
+      },
+      "timeout": {
+        "type": "integer",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Extrinsics list."
+}

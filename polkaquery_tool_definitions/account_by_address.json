@@ -1,0 +1,19 @@
+{
+  "name": "account_by_address",
+  "description": "Account by address",
+  "api_path": "/api/v2/scan/search",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "key": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "key"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Account by address."
+}

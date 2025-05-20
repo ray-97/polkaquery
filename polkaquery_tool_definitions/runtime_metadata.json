@@ -1,0 +1,18 @@
+{
+  "name": "runtime_metadata",
+  "description": "Runtime metadata",
+  "api_path": "/api/scan/runtime/metadata",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "spec": {
+        "type": "integer",
+        "description": "Runtime version",
+        "example": 9430
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Runtime metadata."
+}

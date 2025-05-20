@@ -1,0 +1,29 @@
+{
+  "name": "xcm_stat_pro",
+  "description": "Xcm Stat (PRO)",
+  "api_path": "/api/scan/xcm/stat",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "end": {
+        "type": "string",
+        "description": "end date, format: 2006-01-02"
+      },
+      "filter_para_id": {
+        "type": "integer",
+        "description": "filter by parachain id, optional",
+        "minimum": 1
+      },
+      "start": {
+        "type": "string",
+        "description": "start date, format: 2006-01-02"
+      }
+    },
+    "required": [
+      "end",
+      "start"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Xcm Stat (PRO)."
+}

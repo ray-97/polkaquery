@@ -1,0 +1,51 @@
+{
+  "name": "coretime_event_list",
+  "description": "Coretime Event list",
+  "api_path": "/api/scan/broker/operation",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "block_range": {
+        "type": "string",
+        "description": "",
+        "example": "110000-120000"
+      },
+      "core": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0,
+        "example": 10
+      },
+      "core_index": {
+        "type": "string",
+        "description": "",
+        "example": "12345-1260-20-12333121323217721"
+      },
+      "event_id": {
+        "type": "string",
+        "description": "",
+        "example": "Interlaced"
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Coretime Event list."
+}

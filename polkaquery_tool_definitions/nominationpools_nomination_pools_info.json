@@ -1,0 +1,17 @@
+{
+  "name": "nominationpools_nomination_pools_info",
+  "description": "Nomination Pools Info",
+  "api_path": "/api/scan/nomination_pool/pool",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "pool_id": {
+        "type": "integer",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Nomination Pools Info."
+}

@@ -1,0 +1,107 @@
+{
+  "name": "account_transfers_list",
+  "description": "Transfers list",
+  "api_path": "/api/v2/scan/transfers",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "after_id": {
+        "type": "array",
+        "description": ""
+      },
+      "asset_symbol": {
+        "type": "string",
+        "description": ""
+      },
+      "asset_unique_id": {
+        "type": "string",
+        "description": ""
+      },
+      "block_range": {
+        "type": "string",
+        "description": ""
+      },
+      "currency": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "token",
+          "usd"
+        ]
+      },
+      "direction": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "all",
+          "sent",
+          "received"
+        ]
+      },
+      "extrinsic_index": {
+        "type": "string",
+        "description": ""
+      },
+      "filter_nft": {
+        "type": "boolean",
+        "description": "filter nft transfer, support uniques module and enjin multi-token"
+      },
+      "include_total": {
+        "type": "boolean",
+        "description": ""
+      },
+      "item_id": {
+        "type": "integer",
+        "description": ""
+      },
+      "max_amount": {
+        "type": "string",
+        "description": ""
+      },
+      "min_amount": {
+        "type": "string",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "asc",
+          "desc"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "success": {
+        "type": "boolean",
+        "description": ""
+      },
+      "timeout": {
+        "type": "integer",
+        "description": ""
+      },
+      "token_category": {
+        "type": "array",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Transfers list."
+}

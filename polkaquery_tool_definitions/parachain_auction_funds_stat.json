@@ -1,0 +1,34 @@
+{
+  "name": "parachain_auction_funds_stat",
+  "description": "Auction funds stat",
+  "api_path": "/api/scan/parachain/auction_funds_stat",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "auction_id": {
+        "type": "integer",
+        "description": ""
+      },
+      "end": {
+        "type": "string",
+        "description": ""
+      },
+      "format": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "day",
+          "hour",
+          "6hour"
+        ]
+      },
+      "start": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Auction funds stat."
+}

@@ -1,0 +1,33 @@
+{
+  "name": "coretime_workload_details",
+  "description": "Coretime workload details",
+  "api_path": "/api/scan/broker/workload/details",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "core": {
+        "type": "integer",
+        "description": "one of core and paraid is required",
+        "minimum": 0,
+        "example": 10
+      },
+      "para_id": {
+        "type": "integer",
+        "description": "",
+        "example": 1000
+      },
+      "region_begin": {
+        "type": "integer",
+        "description": "",
+        "example": 200000
+      },
+      "show_workplan": {
+        "type": "boolean",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Coretime workload details."
+}

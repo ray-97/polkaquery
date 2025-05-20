@@ -1,0 +1,18 @@
+{
+  "name": "uniquenetwork_nft_info",
+  "description": "NFT info",
+  "api_path": "/api/scan/unique/info",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "collection_id": {
+        "type": "string",
+        "description": "",
+        "example": "1"
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for NFT info."
+}

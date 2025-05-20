@@ -1,0 +1,39 @@
+{
+  "name": "stat_daily_stat_v2",
+  "description": "Daily stat(v2)",
+  "api_path": "/api/v2/scan/daily",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "category": {
+        "type": "string",
+        "description": ""
+      },
+      "end": {
+        "type": "string",
+        "description": "",
+        "example": "2023-06-01"
+      },
+      "format": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "day",
+          "hour",
+          "6hour"
+        ]
+      },
+      "start": {
+        "type": "string",
+        "description": "",
+        "example": "2023-05-01"
+      }
+    },
+    "required": [
+      "end",
+      "start"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Daily stat(v2)."
+}

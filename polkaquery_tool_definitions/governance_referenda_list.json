@@ -1,0 +1,50 @@
+{
+  "name": "governance_referenda_list",
+  "description": "Referenda list",
+  "api_path": "/api/scan/referenda/referendums",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "account": {
+        "type": "string",
+        "description": ""
+      },
+      "call_module": {
+        "type": "string",
+        "description": ""
+      },
+      "call_name": {
+        "type": "string",
+        "description": ""
+      },
+      "origin": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "status": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "completed",
+          "active"
+        ]
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Referenda list."
+}

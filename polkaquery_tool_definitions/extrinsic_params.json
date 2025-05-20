@@ -1,0 +1,19 @@
+{
+  "name": "extrinsic_params",
+  "description": "Extrinsic params",
+  "api_path": "/api/scan/extrinsic/params",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "extrinsic_index": {
+        "type": "array",
+        "description": ""
+      }
+    },
+    "required": [
+      "extrinsic_index"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Extrinsic params."
+}

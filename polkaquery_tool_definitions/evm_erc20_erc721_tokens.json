@@ -1,0 +1,59 @@
+{
+  "name": "evm_erc20_erc721_tokens",
+  "description": "EVM erc20/erc721 tokens",
+  "api_path": "/api/scan/evm/tokens",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "category": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "erc20",
+          "erc721",
+          "erc1155",
+          "nft"
+        ]
+      },
+      "contracts": {
+        "type": "array",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "desc",
+          "asc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "holders",
+          "transfer_count",
+          "symbol"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "search": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for EVM erc20/erc721 tokens."
+}

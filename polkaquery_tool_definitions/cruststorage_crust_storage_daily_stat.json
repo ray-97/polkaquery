@@ -1,0 +1,33 @@
+{
+  "name": "cruststorage_crust_storage_daily_stat",
+  "description": "Crust storage daily stat",
+  "api_path": "/api/scan/swork/daily",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "category": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "nodes",
+          "storage",
+          "files"
+        ]
+      },
+      "end": {
+        "type": "string",
+        "description": ""
+      },
+      "start": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "end",
+      "start"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Crust storage daily stat."
+}

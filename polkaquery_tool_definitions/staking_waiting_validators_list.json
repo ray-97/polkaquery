@@ -1,0 +1,31 @@
+{
+  "name": "staking_waiting_validators_list",
+  "description": "Waiting validators list",
+  "api_path": "/api/scan/staking/waiting",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "desc",
+          "asc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "bonded_nominators",
+          "bonded_owner",
+          "count_nominators",
+          "validator_prefs_value"
+        ]
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Waiting validators list."
+}

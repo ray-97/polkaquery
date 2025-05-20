@@ -1,0 +1,68 @@
+{
+  "name": "governance_referendum_votes_list_legacy",
+  "description": "Referendum votes list(legacy)",
+  "api_path": "/api/scan/democracy/votes",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "account": {
+        "type": "string",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "asc",
+          "desc"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "referendum_index": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "sort": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "conviction",
+          "amount",
+          "votes"
+        ]
+      },
+      "status": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "Ayes",
+          "Nays"
+        ]
+      },
+      "valid": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "valid",
+          "invalid"
+        ]
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Referendum votes list(legacy)."
+}

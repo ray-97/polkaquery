@@ -1,0 +1,18 @@
+{
+  "name": "governance_treasury_proposal",
+  "description": "Treasury proposal",
+  "api_path": "/api/scan/treasury/proposal",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "proposal_id": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Treasury proposal."
+}

@@ -1,0 +1,18 @@
+{
+  "name": "governance_democracy_details",
+  "description": "Democracy details",
+  "api_path": "/api/scan/democracy/proposal",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "democracy_id": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Democracy details."
+}

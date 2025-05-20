@@ -1,0 +1,19 @@
+{
+  "name": "parachain_best_bid",
+  "description": "Best bid",
+  "api_path": "/api/scan/parachain/bestBid",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "bid_id": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "bid_id"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Best bid."
+}

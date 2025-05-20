@@ -1,0 +1,19 @@
+{
+  "name": "event_params_by_index",
+  "description": "Event params by index",
+  "api_path": "/api/scan/event/params",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "event_index": {
+        "type": "array",
+        "description": ""
+      }
+    },
+    "required": [
+      "event_index"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Event params by index."
+}

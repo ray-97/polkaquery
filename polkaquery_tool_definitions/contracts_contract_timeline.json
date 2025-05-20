@@ -1,0 +1,17 @@
+{
+  "name": "contracts_contract_timeline",
+  "description": "Contract Timeline",
+  "api_path": "/api/scan/contracts/timeline",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "contract": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Contract Timeline."
+}

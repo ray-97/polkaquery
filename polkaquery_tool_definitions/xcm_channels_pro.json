@@ -1,0 +1,38 @@
+{
+  "name": "xcm_channels_pro",
+  "description": "Xcm Channels (PRO)",
+  "api_path": "/api/scan/xcm/channels",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "filter_para_id": {
+        "type": "integer",
+        "description": "filter by parachain id(sender or recipient)",
+        "minimum": 1
+      },
+      "recipient": {
+        "type": "integer",
+        "description": "HRMP recipient parachain id",
+        "minimum": 1
+      },
+      "sender": {
+        "type": "integer",
+        "description": "HRMP sender parachain id",
+        "minimum": 1
+      },
+      "status": {
+        "type": "string",
+        "description": "filter by status",
+        "enum": [
+          "closed",
+          "accepted",
+          "canceled",
+          "requested"
+        ]
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Xcm Channels (PRO)."
+}

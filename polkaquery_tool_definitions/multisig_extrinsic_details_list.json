@@ -1,0 +1,43 @@
+{
+  "name": "multisig_extrinsic_details_list",
+  "description": "Multisig extrinsic details list",
+  "api_path": "/api/scan/multisigs/details",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "account": {
+        "type": "string",
+        "description": "",
+        "example": "14RYaXRSqb9rPqMaAVp1UZW2czQ6dMNGMbvukwfifi6m8ZgZ"
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "status": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "Approval",
+          "Executed",
+          "Cancelled",
+          "Failed"
+        ]
+      }
+    },
+    "required": [
+      "account"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Multisig extrinsic details list."
+}

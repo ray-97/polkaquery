@@ -1,0 +1,21 @@
+{
+  "name": "enjin_multitoken_item_detail",
+  "description": "Enjin multiToken item detail",
+  "api_path": "/api/scan/multiTokens/info/item",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "collection_id": {
+        "type": "string",
+        "description": ""
+      },
+      "token_id": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Enjin multiToken item detail."
+}

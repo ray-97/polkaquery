@@ -1,0 +1,19 @@
+{
+  "name": "staking_unbonding_list",
+  "description": "Unbonding list",
+  "api_path": "/api/scan/staking/unbonding",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "address"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Unbonding list."
+}

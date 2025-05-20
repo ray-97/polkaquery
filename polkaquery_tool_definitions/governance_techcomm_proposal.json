@@ -1,0 +1,18 @@
+{
+  "name": "governance_techcomm_proposal",
+  "description": "Techcomm proposal",
+  "api_path": "/api/scan/techcomm/proposal",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "proposal_id": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Techcomm proposal."
+}

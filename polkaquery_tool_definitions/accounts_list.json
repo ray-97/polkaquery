@@ -1,0 +1,87 @@
+{
+  "name": "accounts_list",
+  "description": "Accounts list",
+  "api_path": "/api/v2/scan/accounts",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "account": {
+        "type": "string",
+        "description": "Get the account data associated with different roles of the account,Only proxy,proxies,multisig,multisigMember,convictionDelegate,convictionDelegated,democracyDelegate,democracyDelegated role is valid"
+      },
+      "address": {
+        "type": "array",
+        "description": "Get the specified account data"
+      },
+      "filter": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "validator",
+          "nominator",
+          "councilMember",
+          "techcomm",
+          "registrar",
+          "system",
+          "module",
+          "evm",
+          "nominationPool",
+          "proxies",
+          "proxy",
+          "multisig",
+          "multisigMember",
+          "fellowship",
+          "onChainIdentity",
+          "convictionDelegate",
+          "convictionDelegated",
+          "democracyDelegate",
+          "democracyDelegated",
+          "multiTokensHolder"
+        ]
+      },
+      "max_balance": {
+        "type": "string",
+        "description": ""
+      },
+      "min_balance": {
+        "type": "string",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "desc",
+          "asc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "balance",
+          "locked",
+          "ring_lock",
+          "nft_amount",
+          "evm_txn_count"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Accounts list."
+}

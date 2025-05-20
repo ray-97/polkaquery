@@ -1,0 +1,19 @@
+{
+  "name": "account_token_list",
+  "description": "Account token list",
+  "api_path": "/api/scan/account/tokens",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "address"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Account token list."
+}

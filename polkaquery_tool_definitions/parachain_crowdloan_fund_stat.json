@@ -1,0 +1,46 @@
+{
+  "name": "parachain_crowdloan_fund_stat",
+  "description": "Crowdloan fund stat",
+  "api_path": "/api/scan/parachain/fundStat",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "from_history": {
+        "type": "boolean",
+        "description": ""
+      },
+      "fund_id": {
+        "type": "string",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "para_id": {
+        "type": "integer",
+        "description": ""
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "who": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Crowdloan fund stat."
+}

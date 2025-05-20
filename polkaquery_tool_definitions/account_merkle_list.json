@@ -1,0 +1,58 @@
+{
+  "name": "account_merkle_list",
+  "description": "Account merkle list",
+  "api_path": "/api/scan/accounts/merkle",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address_type": {
+        "type": "string",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "desc",
+          "asc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "balance",
+          "locked"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "tag_name": {
+        "type": "string",
+        "description": ""
+      },
+      "tag_sub_type": {
+        "type": "string",
+        "description": ""
+      },
+      "tag_type": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Account merkle list."
+}

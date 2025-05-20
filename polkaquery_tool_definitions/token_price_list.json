@@ -1,0 +1,12 @@
+{
+  "name": "token_price_list",
+  "description": "Token price list",
+  "api_path": "/api/scan/token/price",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Token price list."
+}

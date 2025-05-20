@@ -1,0 +1,94 @@
+{
+  "name": "xcm_messages_list_pro",
+  "description": "Xcm Messages list (PRO)",
+  "api_path": "/api/scan/xcm/list",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": "filter by address"
+      },
+      "after_id": {
+        "type": "string",
+        "description": "Pagination, the last message id of the previous page"
+      },
+      "block_range": {
+        "type": "string",
+        "description": "filter by block range,eg: 1000-2000",
+        "example": "20000-30000"
+      },
+      "bridge_type": {
+        "type": "array",
+        "description": "filter by bridge type"
+      },
+      "dest_para_id": {
+        "type": "integer",
+        "description": "filter by receiver parachain id"
+      },
+      "extrinsic_index": {
+        "type": "string",
+        "description": "filter by send extrinsic index"
+      },
+      "filter_para_id": {
+        "type": "integer",
+        "description": "filter by parachain id(sender or receiver)",
+        "minimum": 1
+      },
+      "filter_symbol": {
+        "type": "string",
+        "description": "filter by asset symbol"
+      },
+      "message_hash": {
+        "type": "string",
+        "description": "filter by message hash"
+      },
+      "message_type": {
+        "type": "string",
+        "description": "filter by message type",
+        "enum": [
+          "transfer",
+          "message"
+        ]
+      },
+      "origin_para_id": {
+        "type": "integer",
+        "description": "filter by sender origin parachain id"
+      },
+      "page": {
+        "type": "integer",
+        "description": "page number, start from 0",
+        "minimum": 0
+      },
+      "protocol": {
+        "type": "string",
+        "description": "filter by XCM protocol",
+        "enum": [
+          "HRMP",
+          "VMP",
+          "UMP",
+          "DMP"
+        ]
+      },
+      "row": {
+        "type": "integer",
+        "description": "page size",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "status": {
+        "type": "string",
+        "description": "filter by status",
+        "enum": [
+          "pending",
+          "relayed",
+          "success",
+          "failed"
+        ]
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Xcm Messages list (PRO)."
+}

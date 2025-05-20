@@ -1,0 +1,12 @@
+{
+  "name": "tokens_providers",
+  "description": "Tokens providers",
+  "api_path": "/api/v2/scan/token/providers",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Tokens providers."
+}

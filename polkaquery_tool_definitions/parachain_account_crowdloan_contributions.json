@@ -1,0 +1,36 @@
+{
+  "name": "parachain_account_crowdloan_contributions",
+  "description": "Account crowdloan contributions",
+  "api_path": "/api/scan/account/contributions",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "include_total": {
+        "type": "boolean",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "who": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "who"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Account crowdloan contributions."
+}

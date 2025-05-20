@@ -1,0 +1,34 @@
+{
+  "name": "contracts_contract_events",
+  "description": "Contract Events",
+  "api_path": "/api/scan/contracts/events",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "contract": {
+        "type": "string",
+        "description": ""
+      },
+      "extrinsic_index": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Contract Events."
+}

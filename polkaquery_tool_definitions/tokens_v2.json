@@ -1,0 +1,52 @@
+{
+  "name": "tokens_v2",
+  "description": "Tokens(v2)",
+  "api_path": "/api/v2/scan/tokens",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "include_extends": {
+        "type": "boolean",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "asc",
+          "desc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "currency_id",
+          "symbol",
+          "holders",
+          "token_id"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "provider": {
+        "type": "string",
+        "description": ""
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Tokens(v2)."
+}

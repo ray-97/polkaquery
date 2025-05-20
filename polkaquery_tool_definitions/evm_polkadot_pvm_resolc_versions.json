@@ -1,0 +1,12 @@
+{
+  "name": "evm_polkadot_pvm_resolc_versions",
+  "description": "Polkadot pvm resolc versions",
+  "api_path": "/api/scan/evm/contract/solcs",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Polkadot pvm resolc versions."
+}

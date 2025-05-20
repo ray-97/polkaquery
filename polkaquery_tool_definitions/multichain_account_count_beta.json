@@ -1,0 +1,19 @@
+{
+  "name": "multichain_account_count_beta",
+  "description": "MultiChain account count (BETA)",
+  "api_path": "/api/scan/multiChain/account/count",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "address"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for MultiChain account count (BETA)."
+}

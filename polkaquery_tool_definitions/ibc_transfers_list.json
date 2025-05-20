@@ -1,0 +1,71 @@
+{
+  "name": "ibc_transfers_list",
+  "description": "Ibc Transfers list",
+  "api_path": "/api/scan/ibc/transfers",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "asset_id": {
+        "type": "string",
+        "description": ""
+      },
+      "asset_symbol": {
+        "type": "string",
+        "description": ""
+      },
+      "asset_unique_id": {
+        "type": "string",
+        "description": ""
+      },
+      "block_range": {
+        "type": "string",
+        "description": "",
+        "example": "110000-120000"
+      },
+      "direction": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "all",
+          "sent",
+          "received"
+        ]
+      },
+      "extrinsic_index": {
+        "type": "string",
+        "description": "",
+        "example": "12321-2"
+      },
+      "from_chain": {
+        "type": "string",
+        "description": "",
+        "example": "composable"
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "to_chain": {
+        "type": "string",
+        "description": "",
+        "example": "picasso"
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Ibc Transfers list."
+}

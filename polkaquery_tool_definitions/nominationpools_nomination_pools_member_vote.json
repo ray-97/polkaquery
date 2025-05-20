@@ -1,0 +1,19 @@
+{
+  "name": "nominationpools_nomination_pools_member_vote",
+  "description": "Nomination Pools Member Vote",
+  "api_path": "/api/scan/nomination_pool/pool/member/vote",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "address"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Nomination Pools Member Vote."
+}

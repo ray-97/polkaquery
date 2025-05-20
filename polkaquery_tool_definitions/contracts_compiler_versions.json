@@ -1,0 +1,12 @@
+{
+  "name": "contracts_compiler_versions",
+  "description": "Compiler versions",
+  "api_path": "/api/scan/contracts/verify/compiler_version",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Compiler versions."
+}

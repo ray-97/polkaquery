@@ -1,0 +1,40 @@
+{
+  "name": "account_balance_history",
+  "description": "Native token balance history implementations vary by network. Block-level granularity: Polkadot, Kusama, Westend. Daily snapshot granularity: All other supported chains",
+  "api_path": "/api/scan/account/balance_history",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "block_range": {
+        "type": "string",
+        "description": "block range filter, e.g.: 1000-2000, only polkadot,kusama,westend available"
+      },
+      "end": {
+        "type": "string",
+        "description": "history end date, e.g.: 2024-01-02"
+      },
+      "recent_block": {
+        "type": "integer",
+        "description": "Block-level returns rows, e.g.: 1000, only polkadot,kusama,westend available",
+        "maximum": 10000
+      },
+      "start": {
+        "type": "string",
+        "description": "history start date, e.g.: 2024-01-02"
+      },
+      "token_unique_id": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "address"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Account Balance History."
+}

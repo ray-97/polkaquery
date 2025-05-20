@@ -1,0 +1,26 @@
+{
+  "name": "blocks_list",
+  "description": "Blocks list",
+  "api_path": "/api/v2/scan/blocks",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Blocks list."
+}

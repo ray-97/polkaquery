@@ -1,0 +1,19 @@
+{
+  "name": "foreignassets_info",
+  "description": "ForeignAssets info",
+  "api_path": "/api/scan/foreignAssets/asset",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "asset_id": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "asset_id"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for ForeignAssets info."
+}

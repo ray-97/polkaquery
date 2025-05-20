@@ -1,0 +1,17 @@
+{
+  "name": "token_list_token_unique_id",
+  "description": "Token list(token unique_id)",
+  "api_path": "/api/scan/token/unique_id",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "new_algorithm": {
+        "type": "boolean",
+        "description": "use new algorithm sum(free - max(0, frozen - reserve))"
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Token list(token unique_id)."
+}

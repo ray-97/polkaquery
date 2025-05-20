@@ -1,0 +1,23 @@
+{
+  "name": "xcm_channel_pro",
+  "description": "Xcm Channel (PRO)",
+  "api_path": "/api/scan/xcm/channel",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "recipient": {
+        "type": "integer",
+        "description": "HRMP recipient parachain id",
+        "minimum": 1
+      },
+      "sender": {
+        "type": "integer",
+        "description": "HRMP sender parachain id",
+        "minimum": 1
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Xcm Channel (PRO)."
+}

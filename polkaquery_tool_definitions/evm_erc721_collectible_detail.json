@@ -1,0 +1,23 @@
+{
+  "name": "evm_erc721_collectible_detail",
+  "description": "EVM erc721 collectible detail",
+  "api_path": "/api/scan/evm/erc721/collectible",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "contract": {
+        "type": "string",
+        "description": ""
+      },
+      "token_id": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "token_id"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for EVM erc721 collectible detail."
+}

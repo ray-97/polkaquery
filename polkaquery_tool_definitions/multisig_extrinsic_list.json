@@ -1,0 +1,26 @@
+{
+  "name": "multisig_extrinsic_list",
+  "description": "Multisig extrinsic list",
+  "api_path": "/api/scan/multisigs",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "call_hash": {
+        "type": "string",
+        "description": "",
+        "example": "0xd43816694f042d9e199687ccdc60f7ef4a353ff38fe069a8fe1575323bcd5ce3"
+      },
+      "multi_id": {
+        "type": "string",
+        "description": "",
+        "example": "14661803-2"
+      }
+    },
+    "required": [
+      "call_hash",
+      "multi_id"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Multisig extrinsic list."
+}

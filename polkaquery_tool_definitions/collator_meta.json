@@ -1,0 +1,12 @@
+{
+  "name": "collator_meta",
+  "description": "Collator Meta",
+  "api_path": "/api/scan/collator/meta",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Collator Meta."
+}

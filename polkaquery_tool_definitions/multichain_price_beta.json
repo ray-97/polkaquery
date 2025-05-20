@@ -1,0 +1,19 @@
+{
+  "name": "multichain_price_beta",
+  "description": "MultiChain price (BETA)",
+  "api_path": "/api/scan/multiChain/price",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "address"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for MultiChain price (BETA)."
+}

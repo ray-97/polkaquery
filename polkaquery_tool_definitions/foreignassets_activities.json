@@ -1,0 +1,30 @@
+{
+  "name": "foreignassets_activities",
+  "description": "ForeignAssets activities",
+  "api_path": "/api/scan/foreignAssets/activities",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "asset_id": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100
+      }
+    },
+    "required": [
+      "asset_id"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for ForeignAssets activities."
+}

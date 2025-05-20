@@ -1,0 +1,26 @@
+{
+  "name": "avail_submitted_data_info",
+  "description": "Submitted Data info",
+  "api_path": "/api/scan/dataAvailability/info",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "extrinsic_index": {
+        "type": "string",
+        "description": "",
+        "example": "277764-458"
+      },
+      "hash": {
+        "type": "string",
+        "description": "",
+        "example": "0x2a421fc1d893762dcb6391fb48193354147e36d2a2655f4e2eb52a204add42a8"
+      }
+    },
+    "required": [
+      "extrinsic_index",
+      "hash"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Submitted Data info."
+}

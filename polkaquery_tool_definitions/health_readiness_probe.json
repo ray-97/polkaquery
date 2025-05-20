@@ -1,0 +1,12 @@
+{
+  "name": "health_readiness_probe",
+  "description": "Readiness Probe",
+  "api_path": "/readiness",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Readiness Probe."
+}

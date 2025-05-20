@@ -1,0 +1,12 @@
+{
+  "name": "evm_meta",
+  "description": "Evm meta",
+  "api_path": "/api/scan/evm/meta",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Evm meta."
+}

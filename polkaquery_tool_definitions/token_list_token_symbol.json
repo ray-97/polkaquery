@@ -1,0 +1,12 @@
+{
+  "name": "token_list_token_symbol",
+  "description": "Token list(token symbol)",
+  "api_path": "/api/scan/token",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Token list(token symbol)."
+}

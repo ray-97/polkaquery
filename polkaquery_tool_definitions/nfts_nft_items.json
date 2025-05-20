@@ -1,0 +1,53 @@
+{
+  "name": "nfts_nft_items",
+  "description": "NFT items",
+  "api_path": "/api/scan/nfts/info/items",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "collection_id": {
+        "type": "string",
+        "description": "",
+        "example": "1"
+      },
+      "order": {
+        "type": "string",
+        "description": "Optional, order sort, default desc",
+        "enum": [
+          "desc",
+          "asc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "Optional, order field",
+        "enum": [
+          "item_id",
+          "create_at",
+          "transfer_count"
+        ]
+      },
+      "owner": {
+        "type": "string",
+        "description": "Optional, owner address",
+        "example": "EaBRZ3VBUFEd6GT9kxXXk9C5gsYC6zAsNfxahmpusrYPtPf"
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for NFT items."
+}

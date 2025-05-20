@@ -1,0 +1,23 @@
+{
+  "name": "api_download_progress",
+  "description": "Download progress",
+  "api_path": "/api/scan/download/progress",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "key": {
+        "type": "string",
+        "description": "download key"
+      },
+      "timeout": {
+        "type": "integer",
+        "description": "timeout"
+      }
+    },
+    "required": [
+      "key"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Download progress."
+}

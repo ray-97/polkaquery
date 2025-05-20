@@ -1,0 +1,12 @@
+{
+  "name": "contracts_compiler_images_tag",
+  "description": "Compiler images tag",
+  "api_path": "/api/scan/contracts/verify/compiler_images",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Compiler images tag."
+}

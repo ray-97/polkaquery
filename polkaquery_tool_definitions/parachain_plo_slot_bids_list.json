@@ -1,0 +1,82 @@
+{
+  "name": "parachain_plo_slot_bids_list",
+  "description": "PLO slot bids list",
+  "api_path": "/api/scan/parachain/bids",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "auction_index": {
+        "type": "integer",
+        "description": ""
+      },
+      "bid_id": {
+        "type": "string",
+        "description": ""
+      },
+      "bidder": {
+        "type": "string",
+        "description": ""
+      },
+      "first_period": {
+        "type": "integer",
+        "description": ""
+      },
+      "from_block": {
+        "type": "integer",
+        "description": ""
+      },
+      "from_history": {
+        "type": "boolean",
+        "description": ""
+      },
+      "fund_id": {
+        "type": "string",
+        "description": ""
+      },
+      "last_period": {
+        "type": "integer",
+        "description": ""
+      },
+      "latest": {
+        "type": "boolean",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "para_id": {
+        "type": "integer",
+        "description": ""
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "source": {
+        "type": "integer",
+        "description": ""
+      },
+      "status": {
+        "type": "integer",
+        "description": ""
+      },
+      "to_block": {
+        "type": "integer",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for PLO slot bids list."
+}

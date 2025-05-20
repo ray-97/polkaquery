@@ -1,0 +1,12 @@
+{
+  "name": "runtime_list",
+  "description": "Runtime list",
+  "api_path": "/api/scan/runtime/list",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Runtime list."
+}

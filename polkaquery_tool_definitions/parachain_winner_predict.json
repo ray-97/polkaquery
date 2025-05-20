@@ -1,0 +1,17 @@
+{
+  "name": "parachain_winner_predict",
+  "description": "Winner predict",
+  "api_path": "/api/scan/parachain/predict",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "auction_index": {
+        "type": "integer",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Winner predict."
+}

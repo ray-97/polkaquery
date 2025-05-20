@@ -1,0 +1,50 @@
+{
+  "name": "uniques_list",
+  "description": "Uniques list",
+  "api_path": "/api/scan/uniques/uniques",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "collection_id": {
+        "type": "string",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "Optional, order sort, default desc",
+        "enum": [
+          "desc",
+          "asc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "Optional, order field",
+        "enum": [
+          "collection_id",
+          "items",
+          "holders",
+          "transfer_count"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "search": {
+        "type": "string",
+        "description": "uniques name"
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Uniques list."
+}

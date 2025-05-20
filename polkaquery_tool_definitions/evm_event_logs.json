@@ -1,0 +1,38 @@
+{
+  "name": "evm_event_logs",
+  "description": "EVM event Logs\uff0creturns the event logs from an address. The current maximum limit for the number of results returned through pagination is 10,000. If you require more, please adjust the block_range parameter.",
+  "api_path": "/api/scan/evm/logs",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": "",
+        "example": "0x4d73adb72bc3dd368966edd0f0b2148401a178e2"
+      },
+      "block_range": {
+        "type": "string",
+        "description": "",
+        "example": "400000-400001"
+      },
+      "hash": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for EVM event Logs."
+}

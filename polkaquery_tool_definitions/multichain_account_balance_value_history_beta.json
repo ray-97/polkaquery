@@ -1,0 +1,29 @@
+{
+  "name": "multichain_account_balance_value_history_beta",
+  "description": "Account balance value history (BETA)",
+  "api_path": "/api/scan/multiChain/balance_value_history",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "end": {
+        "type": "string",
+        "description": ""
+      },
+      "start": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "address",
+      "end",
+      "start"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Account balance value history (BETA)."
+}

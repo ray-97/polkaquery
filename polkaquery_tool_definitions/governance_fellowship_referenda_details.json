@@ -1,0 +1,18 @@
+{
+  "name": "governance_fellowship_referenda_details",
+  "description": "Fellowship referenda details",
+  "api_path": "/api/scan/fellowship/referendum",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "referendum_index": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Fellowship referenda details."
+}

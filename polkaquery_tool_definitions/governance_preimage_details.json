@@ -1,0 +1,19 @@
+{
+  "name": "governance_preimage_details",
+  "description": "Preimage details",
+  "api_path": "/api/scan/preimage/details",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "hash": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "hash"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Preimage details."
+}

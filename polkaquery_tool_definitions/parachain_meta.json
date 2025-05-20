@@ -1,0 +1,12 @@
+{
+  "name": "parachain_meta",
+  "description": "Parachain meta",
+  "api_path": "/api/scan/parachain/meta",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Parachain meta."
+}

@@ -1,0 +1,18 @@
+{
+  "name": "governance_bounty_info",
+  "description": "Bounty info",
+  "api_path": "/api/scan/bounties/proposal",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "proposal_id": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Bounty info."
+}

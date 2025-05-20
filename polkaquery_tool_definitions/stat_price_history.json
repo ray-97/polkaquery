@@ -1,0 +1,40 @@
+{
+  "name": "stat_price_history",
+  "description": "Price history",
+  "api_path": "/api/scan/price/history",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "currency": {
+        "type": "string",
+        "description": ""
+      },
+      "end": {
+        "type": "string",
+        "description": "",
+        "example": "2023-06-01"
+      },
+      "format": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "day",
+          "hour",
+          "6hour",
+          "12hour"
+        ]
+      },
+      "start": {
+        "type": "string",
+        "description": "",
+        "example": "2023-05-01"
+      }
+    },
+    "required": [
+      "end",
+      "start"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Price history."
+}

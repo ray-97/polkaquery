@@ -1,0 +1,23 @@
+{
+  "name": "evm_erc1155_collectible_detail",
+  "description": "EVM erc1155 collectible detail",
+  "api_path": "/api/scan/evm/erc1155/collectible",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "contract": {
+        "type": "string",
+        "description": ""
+      },
+      "token_id": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "token_id"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for EVM erc1155 collectible detail."
+}

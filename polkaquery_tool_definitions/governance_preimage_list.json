@@ -1,0 +1,43 @@
+{
+  "name": "governance_preimage_list",
+  "description": "Preimage list",
+  "api_path": "/api/scan/preimage/list",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "source": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "inline",
+          "preimage"
+        ]
+      },
+      "status": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "cleared",
+          "unrequested",
+          "requested"
+        ]
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Preimage list."
+}

@@ -1,0 +1,23 @@
+{
+  "name": "evm_transaction_info",
+  "description": "EVM transaction info",
+  "api_path": "/api/scan/evm/transaction",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "extrinsic_index": {
+        "type": "string",
+        "description": "Optional, ExtrinsicIndex, such as 4780334-2",
+        "example": "4780334-2"
+      },
+      "hash": {
+        "type": "string",
+        "description": "Optional, Also known as Transaction ID (TxID).",
+        "example": "0x09bc77f61a670ea22b66e1e440d2c2163fb43e11974e3563109630571fae42ac"
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for EVM transaction info."
+}

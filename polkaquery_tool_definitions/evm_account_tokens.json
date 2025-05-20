@@ -1,0 +1,19 @@
+{
+  "name": "evm_account_tokens",
+  "description": "EVM account tokens",
+  "api_path": "/api/scan/evm/account/tokens",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "address"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for EVM account tokens."
+}

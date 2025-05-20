@@ -1,0 +1,17 @@
+{
+  "name": "contracts_contract_info",
+  "description": "Contract info",
+  "api_path": "/api/scan/contracts/info",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "contract": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Contract info."
+}

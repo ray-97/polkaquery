@@ -1,0 +1,19 @@
+{
+  "name": "evm_abi_by_method_id_or_event_topic",
+  "description": "ABI by method id or event topic",
+  "api_path": "/api/scan/evm/abi",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "array",
+        "description": ""
+      }
+    },
+    "required": [
+      "id"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for ABI by method id or event topic."
+}

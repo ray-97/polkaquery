@@ -1,0 +1,52 @@
+{
+  "name": "evm_contract_list",
+  "description": "EVM contract list",
+  "api_path": "/api/scan/evm/contract/list",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "contracts": {
+        "type": "array",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "desc",
+          "asc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "verify_time",
+          "transaction_count"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "search": {
+        "type": "string",
+        "description": ""
+      },
+      "verified": {
+        "type": "boolean",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for EVM contract list."
+}

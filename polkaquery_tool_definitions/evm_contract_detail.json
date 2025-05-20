@@ -1,0 +1,19 @@
+{
+  "name": "evm_contract_detail",
+  "description": "EVM contract detail",
+  "api_path": "/api/scan/evm/contract",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "address"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for EVM contract detail."
+}

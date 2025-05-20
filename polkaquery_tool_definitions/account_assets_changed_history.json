@@ -1,0 +1,36 @@
+{
+  "name": "account_assets_changed_history",
+  "description": "Get the account assets changed history (currently only support the assets & foreign assets)",
+  "api_path": "/api/scan/account/assets_changed",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "asset_unique_id": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      }
+    },
+    "required": [
+      "address"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Account assets changed history."
+}

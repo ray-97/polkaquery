@@ -1,0 +1,12 @@
+{
+  "name": "currency_supported_currencies",
+  "description": "supported currencies",
+  "api_path": "/api/scan/open/currencies",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for supported currencies."
+}

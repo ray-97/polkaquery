@@ -1,0 +1,31 @@
+{
+  "name": "uniquenetwork_nft_holders",
+  "description": "NFT holders",
+  "api_path": "/api/scan/unique/info/holders",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "collection_id": {
+        "type": "string",
+        "description": "",
+        "example": "1"
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for NFT holders."
+}

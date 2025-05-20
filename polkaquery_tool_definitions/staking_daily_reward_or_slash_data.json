@@ -1,0 +1,56 @@
+{
+  "name": "staking_daily_reward_or_slash_data",
+  "description": "Get daily reward or slash data. Only supports agung-testnet,peaq,krest network",
+  "api_path": "/api/scan/daily/reward_slash",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "category": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "Reward",
+          "Slash"
+        ]
+      },
+      "end": {
+        "type": "string",
+        "description": "",
+        "example": "2024-07-02"
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "asc",
+          "desc"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "start": {
+        "type": "string",
+        "description": "",
+        "example": "2024-07-01"
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for daily reward or slash data."
+}

@@ -1,0 +1,37 @@
+{
+  "name": "stat_daily_token_stat",
+  "description": "Daily token stat",
+  "api_path": "/api/scan/daily_token",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "end": {
+        "type": "string",
+        "description": "",
+        "example": "2023-06-01"
+      },
+      "format": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "day"
+        ]
+      },
+      "start": {
+        "type": "string",
+        "description": "",
+        "example": "2023-05-01"
+      },
+      "symbol": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "end",
+      "start"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Daily token stat."
+}

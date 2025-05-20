@@ -1,0 +1,12 @@
+{
+  "name": "uniques_list_all",
+  "description": "Uniques list all",
+  "api_path": "/api/scan/uniques/all",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Uniques list all."
+}

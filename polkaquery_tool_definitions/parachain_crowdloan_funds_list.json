@@ -1,0 +1,86 @@
+{
+  "name": "parachain_crowdloan_funds_list",
+  "description": "Crowdloan funds list",
+  "api_path": "/api/scan/parachain/funds",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "auction_index": {
+        "type": "integer",
+        "description": ""
+      },
+      "bid_id": {
+        "type": "string",
+        "description": ""
+      },
+      "first_period": {
+        "type": "integer",
+        "description": ""
+      },
+      "from_block": {
+        "type": "integer",
+        "description": ""
+      },
+      "from_history": {
+        "type": "boolean",
+        "description": ""
+      },
+      "fund_id": {
+        "type": "string",
+        "description": ""
+      },
+      "last_period": {
+        "type": "integer",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": ""
+      },
+      "owner": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "para_id": {
+        "type": "integer",
+        "description": ""
+      },
+      "para_ids": {
+        "type": "array",
+        "description": ""
+      },
+      "progress": {
+        "type": "boolean",
+        "description": ""
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "status": {
+        "type": "integer",
+        "description": ""
+      },
+      "statuses": {
+        "type": "array",
+        "description": ""
+      },
+      "to_block": {
+        "type": "integer",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Crowdloan funds list."
+}

@@ -1,0 +1,18 @@
+{
+  "name": "evm_block_by_block_number",
+  "description": "Evm block by block number",
+  "api_path": "/api/scan/evm/block",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "block_num": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Evm block by block number."
+}

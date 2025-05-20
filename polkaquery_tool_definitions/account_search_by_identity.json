@@ -1,0 +1,19 @@
+{
+  "name": "account_search_by_identity",
+  "description": "Search by identity",
+  "api_path": "/api/scan/search/identity",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "identity": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "identity"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Search by identity."
+}

@@ -1,0 +1,17 @@
+{
+  "name": "tokens_native_token_list",
+  "description": "Native token list",
+  "api_path": "/api/v2/scan/token/native",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "include_extends": {
+        "type": "boolean",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Native token list."
+}

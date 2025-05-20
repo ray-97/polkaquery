@@ -1,0 +1,35 @@
+{
+  "name": "coretime_workload_list",
+  "description": "Coretime workload list",
+  "api_path": "/api/scan/broker/workloads",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "core_view": {
+        "type": "boolean",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "region_begin": {
+        "type": "integer",
+        "description": "",
+        "example": 200000
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 500,
+        "example": 10
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Coretime workload list."
+}

@@ -1,0 +1,46 @@
+{
+  "name": "staking_validators_list",
+  "description": "Validators list",
+  "api_path": "/api/scan/staking/validators",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "desc",
+          "asc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "rank_validator",
+          "bonded_nominators",
+          "bonded_owner",
+          "count_nominators",
+          "validator_prefs_value",
+          "bonded_total"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 0,
+        "maximum": 100,
+        "example": 10
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Validators list."
+}

@@ -1,0 +1,21 @@
+{
+  "name": "tokens_search",
+  "description": "Tokens search",
+  "api_path": "/api/v2/scan/token/search",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "include_extends": {
+        "type": "boolean",
+        "description": ""
+      },
+      "unique_ids": {
+        "type": "array",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Tokens search."
+}

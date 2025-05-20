@@ -1,0 +1,62 @@
+{
+  "name": "account_token_holders_list",
+  "description": "Token holders list",
+  "api_path": "/api/scan/token/holders",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "included_zero_balance": {
+        "type": "boolean",
+        "description": ""
+      },
+      "max_balance": {
+        "type": "string",
+        "description": ""
+      },
+      "min_balance": {
+        "type": "string",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "desc",
+          "asc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "balance",
+          "locked"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "token": {
+        "type": "string",
+        "description": ""
+      },
+      "unique_id": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Token holders list."
+}

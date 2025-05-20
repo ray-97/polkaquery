@@ -1,0 +1,37 @@
+{
+  "name": "cruststorage_crust_storage_orders",
+  "description": "Crust storage orders",
+  "api_path": "/api/scan/swork/orders",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "array",
+        "description": ""
+      },
+      "expired_status": {
+        "type": "integer",
+        "description": "",
+        "enum": [
+          1,
+          2,
+          3
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Crust storage orders."
+}

@@ -1,0 +1,17 @@
+{
+  "name": "search_check_hash",
+  "description": "Check hash",
+  "api_path": "/api/scan/check_hash",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "hash": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Check hash."
+}

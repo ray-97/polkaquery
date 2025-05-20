@@ -1,0 +1,12 @@
+{
+  "name": "common_current_timestamp",
+  "description": "current timestamp",
+  "api_path": "/api/now",
+  "api_method": "GET",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for current timestamp."
+}

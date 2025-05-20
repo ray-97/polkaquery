@@ -1,0 +1,32 @@
+{
+  "name": "extrinsic_reward",
+  "description": "Extrinsic reward",
+  "api_path": "/api/scan/extrinsic/reward",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "extrinsic_index": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      }
+    },
+    "required": [
+      "extrinsic_index"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Extrinsic reward."
+}

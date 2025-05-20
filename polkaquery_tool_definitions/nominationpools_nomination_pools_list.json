@@ -1,0 +1,23 @@
+{
+  "name": "nominationpools_nomination_pools_list",
+  "description": "Nomination Pools List",
+  "api_path": "/api/scan/nomination_pool/pools",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "state": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "Destroying",
+          "Open",
+          "Blocked",
+          "Destroyed"
+        ]
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Nomination Pools List."
+}

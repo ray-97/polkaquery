@@ -1,0 +1,40 @@
+{
+  "name": "evm_erc1155_collectibles",
+  "description": "EVM ERC1155 collectibles",
+  "api_path": "/api/scan/evm/erc1155/collectibles",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "after_id": {
+        "type": "integer",
+        "description": ""
+      },
+      "contract": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "token_id": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for EVM ERC1155 collectibles."
+}

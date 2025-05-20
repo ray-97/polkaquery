@@ -1,0 +1,55 @@
+{
+  "name": "collator_list",
+  "description": "Collator List",
+  "api_path": "/api/scan/collator/list",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "account": {
+        "type": "string",
+        "description": ""
+      },
+      "order": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "desc",
+          "asc"
+        ]
+      },
+      "order_field": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "account",
+          "bond",
+          "last_change_block",
+          "last_authored_block"
+        ]
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "status": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Collator List."
+}

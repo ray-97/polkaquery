@@ -1,0 +1,33 @@
+{
+  "name": "xcm_bridge_stat_pro",
+  "description": "Xcm Bridge Stat (PRO)",
+  "api_path": "/api/scan/xcm/bridge_stat",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "end": {
+        "type": "string",
+        "description": "end date, format: 2006-01-02"
+      },
+      "format": {
+        "type": "string",
+        "description": "json result format, default is day",
+        "enum": [
+          "hour",
+          "day",
+          "6hour"
+        ]
+      },
+      "start": {
+        "type": "string",
+        "description": "start date, format: 2006-01-02"
+      }
+    },
+    "required": [
+      "end",
+      "start"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Xcm Bridge Stat (PRO)."
+}

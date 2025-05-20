@@ -1,0 +1,52 @@
+{
+  "name": "staking_reward_or_slash_list",
+  "description": "Reward or slash list",
+  "api_path": "/api/scan/account/reward_slash",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "block_range": {
+        "type": "string",
+        "description": ""
+      },
+      "category": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "Reward",
+          "Slash"
+        ]
+      },
+      "is_stash": {
+        "type": "boolean",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "timeout": {
+        "type": "integer",
+        "description": ""
+      }
+    },
+    "required": [
+      "address"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Reward or slash list."
+}

@@ -1,0 +1,49 @@
+{
+  "name": "uniquenetwork_nfts_list",
+  "description": "NFTs list",
+  "api_path": "/api/scan/unique/list",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "collection_id": {
+        "type": "string",
+        "description": "",
+        "example": "1"
+      },
+      "order": {
+        "type": "string",
+        "description": "Optional, order sort, default desc",
+        "enum": [
+          "desc",
+          "asc"
+        ],
+        "example": "desc"
+      },
+      "order_field": {
+        "type": "string",
+        "description": "Optional, order field",
+        "enum": [
+          "items",
+          "holders",
+          "collection_id",
+          "transfer_count"
+        ],
+        "example": "holders"
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for NFTs list."
+}

@@ -1,0 +1,19 @@
+{
+  "name": "log_block_log_by_index",
+  "description": "Block log by index",
+  "api_path": "/api/scan/log",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "log_index": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "log_index"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Block log by index."
+}

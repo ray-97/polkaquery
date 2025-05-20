@@ -1,0 +1,19 @@
+{
+  "name": "parachain_auction_leading_blocks",
+  "description": "Auction leading blocks",
+  "api_path": "/api/scan/parachain/auction_leading_blocks",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "auction_id": {
+        "type": "integer",
+        "description": ""
+      }
+    },
+    "required": [
+      "auction_id"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Auction leading blocks."
+}

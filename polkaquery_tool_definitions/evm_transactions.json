@@ -1,0 +1,59 @@
+{
+  "name": "evm_transactions",
+  "description": "Evm transactions",
+  "api_path": "/api/scan/evm/v2/transactions",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "address": {
+        "type": "string",
+        "description": ""
+      },
+      "after_id": {
+        "type": "integer",
+        "description": ""
+      },
+      "block_num": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1
+      },
+      "block_range": {
+        "type": "string",
+        "description": ""
+      },
+      "contract": {
+        "type": "string",
+        "description": ""
+      },
+      "direction": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "from",
+          "to",
+          "all"
+        ],
+        "default": "from"
+      },
+      "page": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "success": {
+        "type": "boolean",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Evm transactions."
+}

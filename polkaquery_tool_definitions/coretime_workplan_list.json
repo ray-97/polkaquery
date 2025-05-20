@@ -1,0 +1,36 @@
+{
+  "name": "coretime_workplan_list",
+  "description": "Coretime workplan list",
+  "api_path": "/api/scan/broker/workplans",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "core": {
+        "type": "integer",
+        "description": "",
+        "example": 10
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "paraId": {
+        "type": "integer",
+        "description": "",
+        "example": 1000
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 500,
+        "example": 10
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Coretime workplan list."
+}

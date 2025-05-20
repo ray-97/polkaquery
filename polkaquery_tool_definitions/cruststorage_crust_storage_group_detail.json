@@ -1,0 +1,19 @@
+{
+  "name": "cruststorage_crust_storage_group_detail",
+  "description": "Crust storage group detail",
+  "api_path": "/api/scan/swork/group",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "group_owner": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "group_owner"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Crust storage group detail."
+}

@@ -1,0 +1,33 @@
+{
+  "name": "currency_price_converter",
+  "description": "currency price converter",
+  "api_path": "/api/scan/open/price_converter",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "from": {
+        "type": "string",
+        "description": ""
+      },
+      "quote": {
+        "type": "string",
+        "description": ""
+      },
+      "time": {
+        "type": "integer",
+        "description": ""
+      },
+      "value": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "from",
+      "quote",
+      "value"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for currency price converter."
+}

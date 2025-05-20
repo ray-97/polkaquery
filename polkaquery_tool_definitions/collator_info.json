@@ -1,0 +1,19 @@
+{
+  "name": "collator_info",
+  "description": "Collator Info",
+  "api_path": "/api/scan/collator/info",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "account": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": [
+      "account"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Collator Info."
+}

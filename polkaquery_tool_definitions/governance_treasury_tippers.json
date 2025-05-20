@@ -1,0 +1,17 @@
+{
+  "name": "governance_treasury_tippers",
+  "description": "Treasury tippers",
+  "api_path": "/api/scan/treasury/tippers",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "hash": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Treasury tippers."
+}

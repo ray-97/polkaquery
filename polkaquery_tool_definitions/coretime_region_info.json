@@ -1,0 +1,20 @@
+{
+  "name": "coretime_region_info",
+  "description": "Coretime region info",
+  "api_path": "/api/scan/broker/region",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "core_index": {
+        "type": "string",
+        "description": "",
+        "example": "12345-1260-20-12333121323217721"
+      }
+    },
+    "required": [
+      "core_index"
+    ]
+  },
+  "response_schema_description": "Returns JSON data for Coretime region info."
+}

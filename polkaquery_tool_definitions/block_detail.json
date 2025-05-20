@@ -1,0 +1,32 @@
+{
+  "name": "block_detail",
+  "description": "Block detail",
+  "api_path": "/api/scan/block",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "block_hash": {
+        "type": "string",
+        "description": "",
+        "example": "0xa8cba357ea4a7d160eb98d37979dffd7213b1dad592a551b391f96c51b19020b"
+      },
+      "block_num": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0,
+        "example": 10000
+      },
+      "block_timestamp": {
+        "type": "integer",
+        "description": ""
+      },
+      "only_head": {
+        "type": "boolean",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Block detail."
+}

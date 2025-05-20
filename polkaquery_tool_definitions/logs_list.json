@@ -1,0 +1,47 @@
+{
+  "name": "logs_list",
+  "description": "Logs list",
+  "api_path": "/api/v2/scan/logs",
+  "api_method": "POST",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "after_id": {
+        "type": "integer",
+        "description": ""
+      },
+      "block_num": {
+        "type": "integer",
+        "description": "",
+        "minimum": 0
+      },
+      "block_range": {
+        "type": "string",
+        "description": ""
+      },
+      "engine": {
+        "type": "string",
+        "description": ""
+      },
+      "page": {
+        "type": "integer",
+        "description": "Page number, starting from 0",
+        "minimum": 0,
+        "example": 0
+      },
+      "row": {
+        "type": "integer",
+        "description": "Data size per page",
+        "minimum": 1,
+        "maximum": 100,
+        "example": 10
+      },
+      "type": {
+        "type": "string",
+        "description": ""
+      }
+    },
+    "required": []
+  },
+  "response_schema_description": "Returns JSON data for Logs list."
+}
