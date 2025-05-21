@@ -1,0 +1,21 @@
+Successfully imported ChatGoogleGenerativeAI from langchain_google_genai.
+Initializing Langchain interaction with PolkaqueryTool using Google Gemini...
+Using ChatGoogleGenerativeAI with model 'gemini-1.5-flash-latest' and explicit API key.
+Langchain chain initialized with Google Gemini.
+
+--- Processing Query: 'What is the balance of 13Z7KjGnzdAdMre9cqRwTZHR6F2p36gqBsaNmQwwosiPz8JT as of block 26100918?' for network 'polkadot' ---
+LLM Decision (Pydantic object): tool_name='polkaquery_search', input='query='What is the balance of 13Z7KjGnzdAdMre9cqRwTZHR6F2p36gqBsaNmQwwosiPz8JT as of block 26100918?' network='polkadot'', reasoning='The question is a direct query for account balance at a specific block height, which is directly within PolkaqueryTool's capabilities.'
+LLM decided to use PolkaqueryTool. Calling tool...
+
+Final Answer (from PolkaqueryTool for 'What is the balance of 13Z7KjGnzdAdMre9cqRwTZHR6F2p36gqBsaNmQwwosiPz8JT as of block 26100918?'):
+At block 26100918 on the Polkadot network, the account 13Z7KjGnzdAdMre9cqRwTZHR6F2p36gqBsaNmQwwosiPz8JT had a balance of 3,298,066,267,680,860.60 DOT.  This information was retrieved from Subscan's on-chain data.
+
+--- Processing Query: 'What is Polkadot 2.0 about?' for network 'polkadot' ---
+LLM Decision (Pydantic object): tool_name='polkaquery_search', input='query='What is Polkadot 2.0 about?' network='polkadot'', reasoning='PolkaqueryTool can likely access and process information regarding Polkadot 2.0 updates and details from the Polkadot network.'
+LLM decided to use PolkaqueryTool. Calling tool...
+
+Final Answer (from PolkaqueryTool for 'What is Polkadot 2.0 about?'):
+Polkadot 2.0 isn't a simple upgrade; it's a significant evolution of the Polkadot network.  Sources like CoinMarketCap and Decrypt describe it as a transformative leap, aiming for an "agile, ubiquitous, compute resource."  The official Polkadot blog highlights Polkadot 2.0 as a rebirth, focusing on bolstering accessibility, community engagement, and developer growth to create a self-sustaining ecosystem.  In short, it's a rebranding and a set of advancements designed to make Polkadot more robust and user-friendly.
+
+--- Langchain Gemini Interaction Finished ---
+Ensure your Polkaquery FastAPI server is running at http://127.0.0.1:8000/llm-query/

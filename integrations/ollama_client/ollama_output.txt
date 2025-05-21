@@ -1,0 +1,34 @@
+Using Ollama model: phi3:mini
+
+--- Starting Ollama Interaction for Query: 'What is the balance of 13Z7KjGnzdAdMre9cqRwTZHR6F2p36gqBsaNmQwwosiPz8JT as of block 26100918?' on Network: 'polkadot' ---
+
+Calling Ollama LLM (model: phi3:mini) with user prompt (first 200 chars): The user has asked: "What is the balance of 13Z7KjGnzdAdMre9cqRwTZHR6F2p36gqBsaNmQwwosiPz8JT as of block 26100918?" for the polkadot network. Based on this, provide your JSON decision....
+LLM Decision: {'use_polkaquery': True, 'polkaquery_question': "What is the balance of account '13Z7KjGnzdAdMre9cqRwTZHR6F2p36gqBsaNmQwwosiPz8JT' as recorded in block 26100918 on the Polkadot network?"}
+
+Calling Polkaquery API with: {'query': "What is the balance of account '13Z7KjGnzdAdMre9cqRwTZHR6F2p36gqBsaNmQwwosiPz8JT' as recorded in block 26100918 on the Polkadot network?", 'network': 'polkadot'}
+Polkaquery API Response: {'answer': "There was an issue fetching data: Error calling API for 'account_balance_history' on network 'polkadot': Status 400 - recent_block must be 10,000 or less", 'network': 'polkadot'}
+
+--- Final Answer (from Polkaquery via Ollama workflow) ---
+There was an issue fetching data: Error calling API for 'account_balance_history' on network 'polkadot': Status 400 - recent_block must be 10,000 or less
+----------------------------------------------------------------------
+
+--- Starting Ollama Interaction for Query: 'Tell me about Polkadot 2.0.' on Network: 'polkadot' ---
+
+Calling Ollama LLM (model: phi3:mini) with user prompt (first 200 chars): The user has asked: "Tell me about Polkadot 2.0." for the polkadot network. Based on this, provide your JSON decision....
+LLM Decision: {'use_polkaquery': True, 'polkaquery_question': 'Can you explain how staking works in the context of Polkadot 2.0?'}
+
+Calling Polkaquery API with: {'query': 'Can you explain how staking works in the context of Polkadot 2.0?', 'network': 'polkadot'}
+Polkaquery API Response: {'answer': 'In Polkadot, staking involves locking your DOT tokens to secure the network and earn rewards.  This is done through Nominated Proof-of-Stake (NPoS). You choose validators to support, and your DOT is automatically distributed amongst them.  The Polkadot website and wiki offer detailed guides on staking.  Importantly, reward payouts are distributed evenly among validators per era, although individual validator returns may vary based on factors like era points.  Unlike some other systems, Polkadot automatically manages the distribution of your stake among your chosen validators to optimize your chances of consistent rewards.', 'network': 'polkadot', 'debug_intent': 'internet_search', 'debug_params': {'search_query': 'How does staking work in Polkadot 2.0?'}, 'debug_formatted_data': {'intent_processed': 'internet_search', 'network': 'polkadot', 'status': 'success', 'summary': "Internet search results for query: 'How does staking work in Polkadot 2.0?'", 'key_data': {'search_provider': 'Tavily', 'count': 3, 'results_preview': [{'title': 'Staking - Polkadot', 'url': 'https://polkadot.com/get-started/staking/', 'snippet': "### Ready to put your DOT to work? Staking on Polkadot's Nominated Proof of Stake (NPoS) lets you earn rewards while securing the network. Staked DOT tokens are bonded and locked, requiring an unbondi..."}, {'title': 'Intro to Staking - Polkadot Wiki', 'url': 'https://wiki.polkadot.network/learn/learn-staking/', 'snippet': 'Unlike other staking systems, Polkadot automatically chooses which of your selected validators will\nbe backed by your bonded tokens. Selecting a group of validators increases your chances of\nconsisten...'}, {'title': 'Polkadot (DOT) Staking - Ledger', 'url': 'https://www.ledger.com/staking-polkadot', 'snippet': 'The global amount of staking rewards available for each era is shared evenly between validators, regardless of their stake (the payout of a specific validator, however, may differ based on era points ...'}]}, 'raw_data_snippet': None}}
+
+--- Final Answer (from Polkaquery via Ollama workflow) ---
+In Polkadot, staking involves locking your DOT tokens to secure the network and earn rewards.  This is done through Nominated Proof-of-Stake (NPoS). You choose validators to support, and your DOT is automatically distributed amongst them.  The Polkadot website and wiki offer detailed guides on staking.  Importantly, reward payouts are distributed evenly among validators per era, although individual validator returns may vary based on factors like era points.  Unlike some other systems, Polkadot automatically manages the distribution of your stake among your chosen validators to optimize your chances of consistent rewards.
+----------------------------------------------------------------------
+
+--- Starting Ollama Interaction for Query: 'What is the weather like in Berlin?' on Network: 'polkadot' ---
+
+Calling Ollama LLM (model: phi3:mini) with user prompt (first 200 chars): The user has asked: "What is the weather like in Berlin?" for the polkadot network. Based on this, provide your JSON decision....
+LLM Decision: {'use_polkaquery': False, 'reasoning': 'Polkaquery specializes in answering questions about the Polkadot ecosystem and not general information such as weather updates.'}
+
+--- Final Answer (Ollama decided not to use Polkaquery) ---
+LLM decided Polkaquery was not needed, but gave no specific explanation.
+----------------------------------------------------------------------
