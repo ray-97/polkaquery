@@ -1,31 +1,31 @@
 # Polkaquery: A Web3 Search Engine for the Polkadot Ecosystem
 
-**Version:** 0.7.0 (LLM-driven with Langchain/Ollama integration examples)
+**Version:** 0.7.1 (Updated README)
 **License:** [GNU General Public License v3.0](LICENSE)
 
 ## Table of Contents
 
 1.  [Project Description](#project-description)
 2.  [Features](#features)
-3.  [Project Structure](#project-structure)
-4.  [Setup and Installation](#setup-and-installation)
+3.  [Setup and Installation](#setup-and-installation)
     * [Prerequisites](#prerequisites)
     * [Environment Setup](#environment-setup)
     * [API Keys](#api-keys)
-5.  [Running Polkaquery Components](#running-polkaquery-components)
+4.  [Running Polkaquery Components](#running-polkaquery-components)
     * [Step 1: Generate Subscan API Tool Definitions](#step-1-generate-subscan-api-tool-definitions)
     * [Step 2: Run the Polkaquery FastAPI Server](#step-2-run-the-polkaquery-fastapi-server)
     * [Step 3: Run Integration Examples](#step-3-run-integration-examples)
         * [Langchain Client with Google Gemini](#langchain-client-with-google-gemini)
         * [Ollama Client](#ollama-client)
-6.  [Interpreting Outcomes](#interpreting-outcomes)
+5.  [Interpreting Outcomes & Examples](#interpreting-outcomes--examples)
     * [Polkaquery FastAPI Server Logs](#polkaquery-fastapi-server-logs)
     * [Tool Definition Files](#tool-definition-files)
     * [Langchain Client Output (`langchain_output.txt`)](#langchain-client-output-langchain_outputtxt)
     * [Ollama Client Output (`ollama_output.txt`)](#ollama-client-output-ollama_outputtxt)
-7.  [Future Enhancements (Roadmap Ideas)](#future-enhancements-roadmap-ideas)
-8.  [Contributing](#contributing)
-9.  [License](#license)
+    * [Visual Examples (`images/` directory)](#visual-examples-images-directory)
+6.  [Future Enhancements (Roadmap Ideas)](#future-enhancements-roadmap-ideas)
+7.  [Contributing](#contributing)
+8.  [License](#license)
 
 ---
 
@@ -47,16 +47,14 @@ This version uses a Large Language Model (LLM), specifically Google Gemini, for 
 * **Ollama Integration Example:** Shows how to interact with Polkaquery using a locally hosted LLM via Ollama.
 * **Modular Design:** Code is structured for better maintainability and scalability.
 
-## Project Structure
-
-polkaquery_project_root/├── polkaquery/                     # Main FastAPI application package│   ├── init.py│   ├── main.py                     # FastAPI app, orchestrator│   ├── core/│   │   ├── init.py│   │   ├── formatter.py            # Response formatting for LLM synthesis│   │   └── network_config.py       # Network configurations│   ├── data_sources/│   │   ├── init.py│   │   └── subscan_client.py       # Client for Subscan API│   └── intent_recognition/│       └── llm_based/│           ├── init.py│           └── gemini_recognizer.py # Gemini LLM-based intent/tool selection├── polkaquery_tool_definitions/    # Generated JSON files for each Subscan API tool│   ├── example_tool_1.json│   └── ...├── integrations/                   # Client examples for Langchain and Ollama│   ├── langchain_client/│   │   ├── init.py│   │   ├── polkaquery_langchain_tool.py # Custom Langchain tool│   │   ├── langchain_gemini_example.py  # Example agent using Gemini│   │   └── langchain_output.txt         # Sample output│   └── ollama_client/│       ├── init.py│       ├── ollama_polkaquery_example.py # Example script for Ollama│       └── ollama_output.txt            # Sample output├── .env.example                    # Example environment file├── .gitignore├── LICENSE                         # GPLv3 License file├── api_spec_parser.py              # Script to generate tool definitions└── requirements.txt                # Python dependencies
 ## Setup and Installation
 
 ### Prerequisites
 
 * Python 3.10+
 * Access to Google Gemini API (requires an API key)
-* (Optional) Tavily API key for enhanced internet search
+* Tavily API key (for internet search functionality)
+* Subscan API key (recommended for reliable Subscan data access)
 * (Optional for Ollama integration) Ollama installed and a model pulled (e.g., `phi3:mini`, `llama3`)
 
 ### Environment Setup
@@ -90,14 +88,17 @@ polkaquery_project_root/├── polkaquery/                     # Main FastAPI
 ### API Keys
 
 1.  Create a `.env` file in the project root (`polkaquery_project_root/`) by copying `.env.example` (if provided) or creating a new one.
-2.  Add your API keys to the `.env` file:
+2.  Add your API keys to the `.env` file. **All listed keys are important for full functionality**:
     ```env
-    SUBSCAN_API_KEY=YOUR_SUBSCAN_API_KEY_HERE         # Optional, but recommended for Subscan
-    GOOGLE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE  # Required for Polkaquery server & Langchain Gemini example
-    TAVILY_API_KEY=YOUR_TAVILY_API_KEY_HERE         # Optional, for internet search in Polkaquery server
+    SUBSCAN_API_KEY=YOUR_SUBSCAN_API_KEY_HERE         # For Subscan API calls; highly recommended for reliable data.
+    GOOGLE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE  # Required for Polkaquery server's core LLM functions & Langchain Gemini example.
+    TAVILY_API_KEY=YOUR_TAVILY_API_KEY_HERE         # Required for the internet search functionality.
     # OLLAMA_BASE_URL=http://localhost:11434        # Optional, if Ollama runs on a different host/port
     # OLLAMA_MODEL=phi3:mini                        # Optional, default model for Ollama client example
     ```
+    * `GOOGLE_GEMINI_API_KEY` is essential for the main Polkaquery server and the Langchain Gemini example.
+    * `TAVILY_API_KEY` is needed for the internet search tool to function. Without it, internet searches will use a placeholder.
+    * `SUBSCAN_API_KEY` is highly recommended for making calls to the Subscan API. While some Subscan endpoints might work without a key, usage may be limited or less reliable.
 
 ## Running Polkaquery Components
 
@@ -118,7 +119,7 @@ This step parses the Subscan API documentation to create structured JSON definit
 
 The Polkaquery server provides the `/llm-query/` endpoint that AI agents will call.
 
-1.  Ensure your `.env` file is correctly set up with `GOOGLE_GEMINI_API_KEY` (and optionally `SUBSCAN_API_KEY`, `TAVILY_API_KEY`).
+1.  Ensure your `.env` file is correctly set up with `GOOGLE_GEMINI_API_KEY`, `TAVILY_API_KEY`, and `SUBSCAN_API_KEY`.
 2.  Ensure the `polkaquery_tool_definitions/` directory has been populated by `api_spec_parser.py`.
 3.  From the project root (`polkaquery_project_root/`), run:
     ```bash
@@ -170,7 +171,7 @@ This example shows a more direct interaction with a locally hosted LLM (via Olla
         python integrations/ollama_client/ollama_polkaquery_example.py > integrations/ollama_client/ollama_output.txt 2>&1
         ```
 
-## Interpreting Outcomes
+## Interpreting Outcomes & Examples
 
 ### Polkaquery FastAPI Server Logs
 
@@ -191,14 +192,11 @@ This example shows a more direct interaction with a locally hosted LLM (via Olla
 
 ### Langchain Client Output (`langchain_output.txt`)
 
-* **Verbose Agent Output:** If `verbose=True` in `AgentExecutor`, you'll see the agent's "thought process":
-    * `Thought:` The agent's reasoning.
-    * `Action:` The tool it decides to use (e.g., `polkaquery_search`).
-    * `Action Input:` The parameters passed to the tool (e.g., `{"query": "...", "network": "..."}`).
-    * `Observation:` The result returned by the Polkaquery tool (which is the synthesized answer from your FastAPI service).
-    * This cycle may repeat if the agent needs more steps (though the current Langchain example is simpler).
-* **Final Answer:** The agent's final answer to the original question.
-* **Error Messages:** If the agent encounters issues (e.g., Polkaquery API errors, LLM parsing errors), these will be printed.
+* **Verbose Agent Output:** If `verbose=True` in `AgentExecutor` (or similar in the simplified Langchain example), you'll see the LLM's decision-making process.
+    * For the simplified example, this includes the `LLM Decision (Pydantic object): tool_name='...', input='...', reasoning='...'`.
+* **Polkaquery Tool Call:** If the LLM decides to use the `polkaquery_search` tool, you'll see a line like `LLM decided to use PolkaqueryTool. Calling tool...`.
+* **Final Answer:** The answer provided by the Polkaquery service after it has processed the query (including its own internal LLM calls for synthesis).
+* **Error Messages:** If the agent encounters issues, these will be printed.
 
 ### Ollama Client Output (`ollama_output.txt`)
 
@@ -210,9 +208,17 @@ This example shows a more direct interaction with a locally hosted LLM (via Olla
 * **Polkaquery API Response:** The JSON response from your Polkaquery FastAPI server.
 * **Final Answer:** The `answer` field from the Polkaquery API response is presented as the final answer in this simpler workflow. If Polkaquery failed, it might show a fallback message generated by Ollama.
 
+### Visual Examples (`images/` directory)
+
+The `images/` directory contains screenshots illustrating example interactions:
+* **Postman Examples:** Showcasing how to query the Polkaquery FastAPI server's `/llm-query/` endpoint directly using Postman, including sample request bodies and responses.
+* **Langchain Tool Output:** Screenshots of the console output when running the `langchain_gemini_example.py`, highlighting the Polkaquery tool being called and the final synthesized answer.
+
+These visual aids can help in understanding the expected request/response formats and the flow of information.
+
 ## Future Enhancements (Roadmap Ideas)
 
-* **Agentic Multi-Step Reasoning:** Implement the more advanced agentic loop in `main.py` to allow Polkaquery to make multiple tool calls sequentially to answer complex queries (e.g., find a bounty ID from a list, then get details for that ID).
+* **Agentic Multi-Step Reasoning:** Implement a more advanced agentic loop in `main.py` to allow Polkaquery to make multiple tool calls sequentially to answer complex queries.
 * **Expanded Toolset:** Parse and integrate all available Subscan API endpoints.
 * **Support for More Data Sources:** Integrate other Polkadot ecosystem APIs (e.g., Polkassembly for governance, specific parachain APIs).
 * **Advanced Formatting:** Improve `formatter.py` to provide more detailed and context-aware structured summaries for the final LLM synthesis, especially for complex list-based data.
@@ -223,7 +229,31 @@ This example shows a more direct interaction with a locally hosted LLM (via Olla
 
 ## Contributing
 
-(Details on how others can contribute, if applicable - e.g., coding standards, pull request process).
+We welcome contributions to Polkaquery! Whether you're looking to fix a bug, add a new feature, improve documentation, or suggest an idea, your help is appreciated. Here's how you can contribute:
+
+**Ways to Contribute:**
+
+* **Reporting Bugs:** If you find a bug, please open an issue on our GitHub repository. Include as much detail as possible: steps to reproduce, expected behavior, actual behavior, your environment (OS, Python version, library versions), and any relevant logs or screenshots.
+* **Suggesting Enhancements:** Have an idea for a new feature or an improvement to an existing one? Open an issue to discuss it. We're particularly interested in:
+    * Support for new Subscan API endpoints.
+    * Integration with other Polkadot ecosystem data sources.
+    * Improvements to the `api_spec_parser.py` for more robust tool definition generation.
+    * Enhancements to the LLM prompts for better tool selection or answer synthesis.
+    * New integration examples (e.g., for different agent frameworks or LLMs).
+* **Pull Requests:** If you'd like to contribute code or documentation:
+    1.  **Fork the repository.**
+    2.  **Create a new branch** for your feature or bug fix (e.g., `feature/new-subscan-tool` or `fix/parser-bug`).
+    3.  **Make your changes.** Ensure your code adheres to any existing style guidelines.
+    4.  **Add tests** for any new functionality or bug fixes.
+    5.  **Ensure all tests pass.**
+    6.  **Update documentation** (README, code comments) as necessary.
+    7.  **Submit a pull request** to the main branch. Clearly describe the changes you've made and why.
+
+**Getting Help:**
+
+* If you have questions or need help with your contribution, feel free to open an issue with the "question" label.
+
+We look forward to your contributions to make Polkaquery an even more powerful tool for the Polkadot ecosystem!
 
 ## License
 
