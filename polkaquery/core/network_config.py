@@ -31,12 +31,5 @@ SUPPORTED_NETWORKS = {
         "decimals": 10, 
         "symbol": "DOT"
     },
-    # "assethub-kusama-rpc": {
-    #     "client": "rpc",
-    #     "ws_url": "wss://kusama-asset-hub-rpc.polkadot.io",
-    #     "decimals": 12,
-    #     "symbol": "KSM"
-    # }
-    # Add more networks as needed
 }
 DEFAULT_NETWORK = "polkadot"

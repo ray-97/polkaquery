@@ -223,7 +223,6 @@ async def _process_llm_query_logic(
     # It's used for error messages and debugging.
     selected_intent_tool_name = "N/A" 
 
-
     try:
         print(f"DEBUG [main._process_llm_query_logic]: Raw query='{raw_query}', Network='{network_name_lower}'")
         intent_tool_name, params = await recognize_intent_with_gemini_llm(raw_query, network_name_lower)
@@ -248,7 +247,7 @@ async def _process_llm_query_logic(
                 symbol="",   
                 original_params=params
             )
-        elif intent_tool_name and intent_tool_name != "unknown": 
+        elif network_name_lower == "polkadot" and intent_tool_name and intent_tool_name != "unknown": 
             data_source_type = "Subscan"
             api_response_json = await call_subscan_api(
                 client=client, 
@@ -265,6 +264,8 @@ async def _process_llm_query_logic(
                 symbol=symbol,
                 original_params=params
             )
+        elif network_name_lower == "assethub-polkadot-rpc" and intent_tool_name and intent_tool_name != "unknown":
+            pass
         else: 
              # This case should ideally be caught by the "unknown" check above
              # or by the recognizer returning an error if the tool name is invalid.
@@ -300,10 +301,22 @@ async def _process_llm_query_logic(
 
 @app.post("/llm-query/")
 async def handle_llm_query(query_body: dict = Body(...)):
-    raw_query = query_body.get("query")
-    network_name_input = query_body.get("network", DEFAULT_NETWORK)
+    """
+    Handles a natural language query about the Polkadot ecosystem,
+    routes it to the appropriate data source, executes the query,
+    and returns a formatted natural language response.
+    """
 
+    raw_query = query_body.get("query")
+
+    network_name_input = query_body.get("network", DEFAULT_NETWORK)
     if not raw_query: raise HTTPException(status_code=400, detail="Query field is missing.")
+
+    # Define keywords that indicate the query is about AssetHub.
+    rpc_keywords = ["assethub", "statemint", "statemine"]
+    if any(keyword in raw_query.lower() for keyword in rpc_keywords):
+        network_name_input = "assethub-polkadot-rpc" # todo: perhaps distinguish routing logic using naming other than network name? 
+
     network_name_lower = network_name_input.lower()
     if network_name_lower not in SUPPORTED_NETWORKS:
         raise HTTPException(status_code=400, detail=f"Unsupported network: '{network_name_input}'. Supported: {list(SUPPORTED_NETWORKS.keys())}")
