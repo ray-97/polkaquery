@@ -227,6 +227,9 @@ These visual aids can help in understanding the expected request/response format
 * **Streaming Responses:** For a more interactive experience with the LLM.
 * **More Sophisticated Error Handling:** Allow the agent/LLM to retry failed tool calls or ask for user clarification.
 
+## Future Enhancements (Code Refactoring)
+* **Prompt and tool initialization** As tooling support grow: shift loading of prompt and tools into a separate module to improve maintainability + rename tool definition directories to reflect their purpose (e.g., `subscan_tools/`).
+
 ## Contributing
 
 We welcome contributions to Polkaquery! Whether you're looking to fix a bug, add a new feature, improve documentation, or suggest an idea, your help is appreciated. Here's how you can contribute:
