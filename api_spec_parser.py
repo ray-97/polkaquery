@@ -26,7 +26,7 @@ import pathlib # For path manipulation
 
 LLMS_TXT_URL = "https://support.subscan.io/llms.txt"
 # Define the directory where individual tool JSON files will be saved
-TOOLS_OUTPUT_DIRECTORY = "polkaquery_tool_definitions"
+TOOLS_OUTPUT_DIRECTORY = "polkaquery_tool_definitions/subscan"
 REQUEST_DELAY_SECONDS = 0.5
 
 def fetch_content(url: str) -> str | None:

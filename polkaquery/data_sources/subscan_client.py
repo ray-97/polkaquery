@@ -25,7 +25,7 @@ TOOLS_MAP = {}
 # Path to the directory containing individual tool JSON files.
 # This assumes subscan_client.py is in polkaquery/data_sources/
 # and polkaquery_tool_definitions/ is in the project root.
-TOOLS_DIR_PATH_CLIENT = pathlib.Path(__file__).resolve().parent.parent.parent / "polkaquery_tool_definitions"
+TOOLS_DIR_PATH_CLIENT = pathlib.Path(__file__).resolve().parent.parent.parent / "polkaquery_tool_definitions" / "subscan"
 
 if TOOLS_DIR_PATH_CLIENT.is_dir():
     for tool_file_path in glob.glob(str(TOOLS_DIR_PATH_CLIENT / "*.json")):

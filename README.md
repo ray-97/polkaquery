@@ -113,14 +113,14 @@ This step parses the Subscan API documentation to create structured JSON definit
     ```
     * By default, this script might be configured to process only a specific API or a limited number for testing (check the `if __name__ == "__main__":` block in the script).
     * To process all APIs, you might need to modify the `main()` call in `api_spec_parser.py` to `main()`. This can take some time.
-3.  This will create/populate the `polkaquery_tool_definitions/` directory with individual `.json` files for each parsed Subscan API.
+3.  This will create/populate the `polkaquery_tool_definitions/subscan` directory with individual `.json` files for each parsed Subscan API.
 
 ### Step 2: Run the Polkaquery FastAPI Server
 
 The Polkaquery server provides the `/llm-query/` endpoint that AI agents will call.
 
 1.  Ensure your `.env` file is correctly set up with `GOOGLE_GEMINI_API_KEY`, `TAVILY_API_KEY`, and `SUBSCAN_API_KEY`.
-2.  Ensure the `polkaquery_tool_definitions/` directory has been populated by `api_spec_parser.py`.
+2.  Ensure the `polkaquery_tool_definitions/subscan` directory has been populated by `api_spec_parser.py`.
 3.  From the project root (`polkaquery_project_root/`), run:
     ```bash
     uvicorn polkaquery.main:app --reload --port 8000
@@ -176,7 +176,7 @@ This example shows a more direct interaction with a locally hosted LLM (via Olla
 ### Polkaquery FastAPI Server Logs
 
 * When the FastAPI server starts, it will print warnings if API keys (`GOOGLE_GEMINI_API_KEY`, `SUBSCAN_API_KEY`, `TAVILY_API_KEY`) are missing.
-* It will also log the number of Subscan tool definitions loaded from the `polkaquery_tool_definitions/` directory.
+* It will also log the number of Subscan tool definitions loaded from the `polkaquery_tool_definitions/subscan` directory.
 * When a query is made to `/llm-query/`, the server logs will show:
     * `DEBUG [main._process_llm_query_logic]: Raw query='...' Network='...'`
     * `DEBUG [gemini_recognizer]: LLM selected tool='...', params={...}` (from the first LLM call for tool selection)
@@ -187,7 +187,7 @@ This example shows a more direct interaction with a locally hosted LLM (via Olla
 
 ### Tool Definition Files
 
-* The `polkaquery_tool_definitions/` directory will contain `.json` files, one for each Subscan API endpoint successfully parsed by `api_spec_parser.py`.
+* The `polkaquery_tool_definitions/subscan` directory will contain `.json` files, one for each Subscan API endpoint successfully parsed by `api_spec_parser.py`.
 * Each JSON file describes a tool: its `name`, `description`, `api_path`, `api_method`, and `parameters` schema. This is what the `gemini_recognizer.py` loads to inform the LLM about available Subscan tools.
 
 ### Langchain Client Output (`langchain_output.txt`)

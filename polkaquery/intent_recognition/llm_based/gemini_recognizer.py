@@ -36,7 +36,8 @@ else:
 AVAILABLE_SUBSCAN_TOOLS = []
 AVAILABLE_ASSETHUB_TOOLS = []
 
-TOOLS_DIR_PATH_SUBSCAN = pathlib.Path(__file__).resolve().parent.parent.parent.parent / "polkaquery_tool_definitions"
+TOOLS_DIR_PATH_SUBSCAN = pathlib.Path(__file__).resolve().parent.parent.parent.parent / "polkaquery_tool_definitions" / "subscan"
+TOOLS_DIR_PATH_ASSETHUB = pathlib.Path(__file__).resolve().parent.parent.parent.parent / "polkaquery_tool_definitions" / "assethub"
 
 # Load Subscan tools
 if TOOLS_DIR_PATH_SUBSCAN.is_dir():
