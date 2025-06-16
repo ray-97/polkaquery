@@ -1,0 +1,19 @@
+{
+    "name": "assethub_system_blockhash",
+    "description": "Map of block numbers to block hashes.",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "BlockHash",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

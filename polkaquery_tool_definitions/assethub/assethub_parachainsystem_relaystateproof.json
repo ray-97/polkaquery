@@ -1,0 +1,12 @@
+{
+    "name": "assethub_parachainsystem_relaystateproof",
+    "description": "The state proof for the last relay parent block.   This field is meant to be updated each block with the validation data inherent. Therefore,  before processing of the inherent, e.g. in `on_initialize` this data may be stale.   This data is also absent from the genesis.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "RelayStateProof",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "assethub_system_inherentsapplied",
+    "description": "Whether all inherents have been applied.",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "InherentsApplied",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

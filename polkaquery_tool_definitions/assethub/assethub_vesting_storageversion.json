@@ -1,0 +1,12 @@
+{
+    "name": "assethub_vesting_storageversion",
+    "description": "Storage version of the pallet.   New networks start with latest version, as determined by the genesis build.",
+    "client_type": "rpc",
+    "pallet_name": "Vesting",
+    "storage_item_name": "StorageVersion",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

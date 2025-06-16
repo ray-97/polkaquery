@@ -1,0 +1,12 @@
+{
+    "name": "assethub_session_queuedkeys",
+    "description": "The queued keys for the next session. When the next session begins, these keys  will be used to determine the validator's session keys.",
+    "client_type": "rpc",
+    "pallet_name": "Session",
+    "storage_item_name": "QueuedKeys",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

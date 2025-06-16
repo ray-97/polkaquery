@@ -1,0 +1,12 @@
+{
+    "name": "assethub_transactionpayment_storageversion",
+    "description": "Query the 'StorageVersion' item from the 'TransactionPayment' pallet.",
+    "client_type": "rpc",
+    "pallet_name": "TransactionPayment",
+    "storage_item_name": "StorageVersion",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

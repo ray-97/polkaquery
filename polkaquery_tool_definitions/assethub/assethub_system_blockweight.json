@@ -1,0 +1,12 @@
+{
+    "name": "assethub_system_blockweight",
+    "description": "The current weight for the block.",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "BlockWeight",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

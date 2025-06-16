@@ -1,0 +1,12 @@
+{
+    "name": "assethub_messagequeue_servicehead",
+    "description": "The origin at which we should begin servicing.",
+    "client_type": "rpc",
+    "pallet_name": "MessageQueue",
+    "storage_item_name": "ServiceHead",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "assethub_aura_currentslot",
+    "description": "The current slot of this block.   This will be set in `on_initialize`.",
+    "client_type": "rpc",
+    "pallet_name": "Aura",
+    "storage_item_name": "CurrentSlot",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

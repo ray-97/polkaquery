@@ -1,0 +1,12 @@
+{
+    "name": "assethub_parachainsystem_pendingvalidationcode",
+    "description": "In case of a scheduled upgrade, this storage field contains the validation code to be  applied.   As soon as the relay chain gives us the go-ahead signal, we will overwrite the  [`:code`][sp_core::storage::well_known_keys::CODE] which will result the next block process  with the new validation code. This concludes the upgrade process.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "PendingValidationCode",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

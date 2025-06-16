@@ -1,0 +1,19 @@
+{
+    "name": "assethub_nfts_collectionmetadataof",
+    "description": "Metadata of a collection.",
+    "client_type": "rpc",
+    "pallet_name": "Nfts",
+    "storage_item_name": "CollectionMetadataOf",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

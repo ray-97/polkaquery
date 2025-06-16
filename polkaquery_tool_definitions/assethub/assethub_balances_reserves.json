@@ -1,0 +1,19 @@
+{
+    "name": "assethub_balances_reserves",
+    "description": "Named reserves on some account balances.   Use of reserves is deprecated in favour of holds. See `https://github.com/paritytech/substrate/pull/12951/`",
+    "client_type": "rpc",
+    "pallet_name": "Balances",
+    "storage_item_name": "Reserves",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

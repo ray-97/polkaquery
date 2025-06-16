@@ -1,0 +1,19 @@
+{
+    "name": "assethub_collatorselection_lastauthoredblock",
+    "description": "Last block authored by collator.",
+    "client_type": "rpc",
+    "pallet_name": "CollatorSelection",
+    "storage_item_name": "LastAuthoredBlock",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

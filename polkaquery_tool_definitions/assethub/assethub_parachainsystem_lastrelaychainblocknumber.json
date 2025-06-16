@@ -1,0 +1,12 @@
+{
+    "name": "assethub_parachainsystem_lastrelaychainblocknumber",
+    "description": "The relay chain block number associated with the last parachain block.   This is updated in `on_finalize`.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "LastRelayChainBlockNumber",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

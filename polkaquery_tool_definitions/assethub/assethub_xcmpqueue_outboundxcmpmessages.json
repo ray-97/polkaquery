@@ -1,0 +1,24 @@
+{
+    "name": "assethub_xcmpqueue_outboundxcmpmessages",
+    "description": "The messages outbound in a given XCMP channel.",
+    "client_type": "rpc",
+    "pallet_name": "XcmpQueue",
+    "storage_item_name": "OutboundXcmpMessages",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            },
+            "key2": {
+                "type": "integer",
+                "description": "Parameter of type u16"
+            }
+        },
+        "required": [
+            "key1",
+            "key2"
+        ]
+    }
+}

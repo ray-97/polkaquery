@@ -1,0 +1,12 @@
+{
+    "name": "assethub_authorship_author",
+    "description": "Author of current block.",
+    "client_type": "rpc",
+    "pallet_name": "Authorship",
+    "storage_item_name": "Author",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

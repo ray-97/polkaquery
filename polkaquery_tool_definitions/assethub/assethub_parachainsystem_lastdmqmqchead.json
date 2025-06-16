@@ -1,0 +1,12 @@
+{
+    "name": "assethub_parachainsystem_lastdmqmqchead",
+    "description": "The last downward message queue chain head we have observed.   This value is loaded before and saved after processing inbound downward messages carried  by the system inherent.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "LastDmqMqcHead",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "assethub_auraext_slotinfo",
+    "description": "Current slot paired with a number of authored blocks.   Updated on each block initialization.",
+    "client_type": "rpc",
+    "pallet_name": "AuraExt",
+    "storage_item_name": "SlotInfo",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

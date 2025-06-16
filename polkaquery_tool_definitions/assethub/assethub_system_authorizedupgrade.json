@@ -1,0 +1,12 @@
+{
+    "name": "assethub_system_authorizedupgrade",
+    "description": "`Some` if a code upgrade has been authorized.",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "AuthorizedUpgrade",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

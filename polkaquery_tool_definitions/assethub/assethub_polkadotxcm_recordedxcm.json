@@ -1,0 +1,12 @@
+{
+    "name": "assethub_polkadotxcm_recordedxcm",
+    "description": "If [`ShouldRecordXcm`] is set to true, then the last XCM program executed locally  will be stored here.  Runtime APIs can fetch the XCM that was executed by accessing this value.   Only relevant if this pallet is being used as the [`xcm_executor::traits::RecordXcm`]  implementation in the XCM executor configuration.",
+    "client_type": "rpc",
+    "pallet_name": "PolkadotXcm",
+    "storage_item_name": "RecordedXcm",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "assethub_timestamp_now",
+    "description": "The current time for the current block.",
+    "client_type": "rpc",
+    "pallet_name": "Timestamp",
+    "storage_item_name": "Now",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

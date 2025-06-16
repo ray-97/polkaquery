@@ -1,0 +1,12 @@
+{
+    "name": "assethub_polkadotxcm_xcmexecutionsuspended",
+    "description": "Global suspension state of the XCM executor.",
+    "client_type": "rpc",
+    "pallet_name": "PolkadotXcm",
+    "storage_item_name": "XcmExecutionSuspended",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

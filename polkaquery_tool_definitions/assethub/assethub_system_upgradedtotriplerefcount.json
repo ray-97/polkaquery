@@ -1,0 +1,12 @@
+{
+    "name": "assethub_system_upgradedtotriplerefcount",
+    "description": "True if we have upgraded so that AccountInfo contains three types of `RefCount`. False  (default) if not.",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "UpgradedToTripleRefCount",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

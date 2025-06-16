@@ -1,0 +1,19 @@
+{
+    "name": "assethub_xcmpqueue_signalmessages",
+    "description": "Any signal messages waiting to be sent.",
+    "client_type": "rpc",
+    "pallet_name": "XcmpQueue",
+    "storage_item_name": "SignalMessages",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

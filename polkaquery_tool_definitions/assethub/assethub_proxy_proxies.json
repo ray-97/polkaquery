@@ -1,0 +1,19 @@
+{
+    "name": "assethub_proxy_proxies",
+    "description": "The set of account proxies. Maps the account which has delegated to the accounts  which are being delegated to, together with the amount held on deposit.",
+    "client_type": "rpc",
+    "pallet_name": "Proxy",
+    "storage_item_name": "Proxies",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "assethub_statetriemigration_autolimits",
+    "description": "The limits that are imposed on automatic migrations.   If set to None, then no automatic migration happens.",
+    "client_type": "rpc",
+    "pallet_name": "StateTrieMigration",
+    "storage_item_name": "AutoLimits",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

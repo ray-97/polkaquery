@@ -1,0 +1,12 @@
+{
+    "name": "assethub_collatorselection_invulnerables",
+    "description": "The invulnerable, permissioned collators. This list must be sorted.",
+    "client_type": "rpc",
+    "pallet_name": "CollatorSelection",
+    "storage_item_name": "Invulnerables",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

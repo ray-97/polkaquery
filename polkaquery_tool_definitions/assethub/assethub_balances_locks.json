@@ -1,0 +1,19 @@
+{
+    "name": "assethub_balances_locks",
+    "description": "Any liquidity locks on some account balances.  NOTE: Should only be accessed when setting, changing and freeing a lock.   Use of locks is deprecated in favour of freezes. See `https://github.com/paritytech/substrate/pull/12951/`",
+    "client_type": "rpc",
+    "pallet_name": "Balances",
+    "storage_item_name": "Locks",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "assethub_collatorselection_candidacybond",
+    "description": "Fixed amount to deposit to become a collator.   When a collator calls `leave_intent` they immediately receive the deposit back.",
+    "client_type": "rpc",
+    "pallet_name": "CollatorSelection",
+    "storage_item_name": "CandidacyBond",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

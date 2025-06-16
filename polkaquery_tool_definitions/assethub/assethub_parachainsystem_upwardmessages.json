@@ -1,0 +1,12 @@
+{
+    "name": "assethub_parachainsystem_upwardmessages",
+    "description": "Upward messages that were sent in a block.   This will be cleared in `on_initialize` of each new block.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "UpwardMessages",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

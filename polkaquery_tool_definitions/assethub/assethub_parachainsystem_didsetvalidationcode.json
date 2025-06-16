@@ -1,0 +1,12 @@
+{
+    "name": "assethub_parachainsystem_didsetvalidationcode",
+    "description": "Were the validation data set to notify the relay chain?",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "DidSetValidationCode",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

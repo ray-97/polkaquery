@@ -1,0 +1,12 @@
+{
+    "name": "assethub_system_parenthash",
+    "description": "Hash of the previous block.",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "ParentHash",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

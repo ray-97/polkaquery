@@ -1,0 +1,12 @@
+{
+    "name": "assethub_collatorselection_desiredcandidates",
+    "description": "Desired number of candidates.   This should ideally always be less than [`Config::MaxCandidates`] for weights to be correct.",
+    "client_type": "rpc",
+    "pallet_name": "CollatorSelection",
+    "storage_item_name": "DesiredCandidates",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

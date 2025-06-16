@@ -1,0 +1,24 @@
+{
+    "name": "assethub_nfts_item",
+    "description": "The items in existence and their ownership details.",
+    "client_type": "rpc",
+    "pallet_name": "Nfts",
+    "storage_item_name": "Item",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            },
+            "key2": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            }
+        },
+        "required": [
+            "key1",
+            "key2"
+        ]
+    }
+}

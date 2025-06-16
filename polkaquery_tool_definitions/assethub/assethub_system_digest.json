@@ -1,0 +1,12 @@
+{
+    "name": "assethub_system_digest",
+    "description": "Digest of the current block, also part of the block header.",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "Digest",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "assethub_polkadotxcm_versiondiscoveryqueue",
+    "description": "Destinations whose latest XCM version we would like to know. Duplicates not allowed, and  the `u32` counter is the number of times that a send to the destination has been attempted,  which is used as a prioritization.",
+    "client_type": "rpc",
+    "pallet_name": "PolkadotXcm",
+    "storage_item_name": "VersionDiscoveryQueue",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

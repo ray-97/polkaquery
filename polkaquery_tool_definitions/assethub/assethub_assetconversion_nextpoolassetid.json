@@ -1,0 +1,12 @@
+{
+    "name": "assethub_assetconversion_nextpoolassetid",
+    "description": "Stores the `PoolAssetId` that is going to be used for the next lp token.  This gets incremented whenever a new lp pool is created.",
+    "client_type": "rpc",
+    "pallet_name": "AssetConversion",
+    "storage_item_name": "NextPoolAssetId",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "name": "assethub_system_account",
+    "description": "The full account information for a particular account ID.",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "Account",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}
