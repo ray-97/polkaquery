@@ -1,0 +1,24 @@
+{
+    "name": "poolassets_account",
+    "description": "The holdings of a specific account for a specific asset.",
+    "client_type": "rpc",
+    "pallet_name": "PoolAssets",
+    "storage_item_name": "Account",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            },
+            "key2": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            }
+        },
+        "required": [
+            "key1",
+            "key2"
+        ]
+    }
+}

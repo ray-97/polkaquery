@@ -78,7 +78,15 @@ AVAILABLE_ASSETHUB_TOOLS.append(INTERNET_SEARCH_TOOL)
 
 def llm_instruction_by_network(network_name: str) -> str:
     if network_name == "assethub-polkadot-rpc":
-        pass
+        return """
+        Instructions:
+        1.  Analyze the User Query within the Polkadot AssetHub context. You have access to a specialized set of RPC tools for querying on-chain data directly from AssetHub.
+        2.  Prioritize RPC Tools for On-Chain Data. If the query asks for specific on-chain information about assets, NFTs, collections, or account balances on AssetHub, choose the most appropriate RPC tool (e.g., `assets_asset`, `assets_account`, `uniques_class`). These tools are for direct data retrieval.
+        3.  Use `internet_search` for General Knowledge. If the query is broad, conceptual (e.g., "what is an NFT?", "how does asset conversion work?"), about news, or asks for information not available as a direct storage query, choose the `internet_search` tool.
+        4.  Extract Parameters Carefully. For RPC tools, you must extract the required keys. For example, `assets_account` requires both an asset ID (`key1`) and an account address (`key2`). For `internet_search`, formulate a clear `search_query`.
+        5.  Handle Ambiguity. If a query is ambiguous or if required parameters (like an asset ID) are missing, respond with `{"intent": "unknown", "parameters": {"reason": "Missing required parameters like asset_id."}}`.
+        6. Respond ONLY with a single, valid JSON object: {{"intent": "chosen_tool_name", "parameters": {{"param_name": "value"}}}}.
+        """
     else:
         return """
         Instructions:

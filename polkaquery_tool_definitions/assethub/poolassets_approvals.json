@@ -1,0 +1,29 @@
+{
+    "name": "poolassets_approvals",
+    "description": "Approved balance transfers. First balance is the amount approved for transfer. Second  is the amount of `T::Currency` reserved for storing this.  First key is the asset ID, second key is the owner and third key is the delegate.",
+    "client_type": "rpc",
+    "pallet_name": "PoolAssets",
+    "storage_item_name": "Approvals",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            },
+            "key2": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            },
+            "key3": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            }
+        },
+        "required": [
+            "key1",
+            "key2",
+            "key3"
+        ]
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "statetriemigration_signedmigrationmaxlimits",
+    "description": "The maximum limits that the signed migration could use.   If not set, no signed submission is allowed.",
+    "client_type": "rpc",
+    "pallet_name": "StateTrieMigration",
+    "storage_item_name": "SignedMigrationMaxLimits",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

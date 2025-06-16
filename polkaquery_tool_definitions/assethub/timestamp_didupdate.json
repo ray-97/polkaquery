@@ -1,0 +1,12 @@
+{
+    "name": "timestamp_didupdate",
+    "description": "Whether the timestamp has been updated in this block.   This value is updated to `true` upon successful submission of a timestamp by a node.  It is then checked at the end of each block execution in the `on_finalize` hook.",
+    "client_type": "rpc",
+    "pallet_name": "Timestamp",
+    "storage_item_name": "DidUpdate",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

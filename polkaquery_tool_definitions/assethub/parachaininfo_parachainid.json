@@ -1,0 +1,12 @@
+{
+    "name": "parachaininfo_parachainid",
+    "description": "Query the 'ParachainId' item from the 'ParachainInfo' pallet.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainInfo",
+    "storage_item_name": "ParachainId",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "transactionpayment_nextfeemultiplier",
+    "description": "Query the 'NextFeeMultiplier' item from the 'TransactionPayment' pallet.",
+    "client_type": "rpc",
+    "pallet_name": "TransactionPayment",
+    "storage_item_name": "NextFeeMultiplier",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

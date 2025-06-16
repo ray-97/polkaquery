@@ -1,0 +1,19 @@
+{
+    "name": "polkadotxcm_lockedfungibles",
+    "description": "Fungible assets which we know are locked on this chain.",
+    "client_type": "rpc",
+    "pallet_name": "PolkadotXcm",
+    "storage_item_name": "LockedFungibles",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

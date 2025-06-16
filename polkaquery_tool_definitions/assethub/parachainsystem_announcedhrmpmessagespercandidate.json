@@ -1,0 +1,12 @@
+{
+    "name": "parachainsystem_announcedhrmpmessagespercandidate",
+    "description": "The number of HRMP messages we observed in `on_initialize` and thus used that number for  announcing the weight of `on_initialize` and `on_finalize`.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "AnnouncedHrmpMessagesPerCandidate",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

@@ -101,7 +101,7 @@ def generate_rpc_tools(ws_url: str, output_dir: str):
                         continue
 
                     # --- Construct the Tool Name ---
-                    tool_name = f"assethub_{pallet.name.lower()}_{storage_item.name.lower()}"
+                    tool_name = f"{pallet.name.lower()}_{storage_item.name.lower()}"
                     
                     # --- Construct the Parameters Schema ---
                     parameters_schema = {"type": "object", "properties": {}, "required": []}

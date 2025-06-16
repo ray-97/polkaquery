@@ -1,0 +1,12 @@
+{
+    "name": "system_events",
+    "description": "Events deposited for the current block.   NOTE: The item is unbound and should therefore never be read on chain.  It could otherwise inflate the PoV size of a block.   Events have a large in-memory size. Box the events to not go out-of-memory  just in case someone still reads them from within the runtime.",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "Events",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

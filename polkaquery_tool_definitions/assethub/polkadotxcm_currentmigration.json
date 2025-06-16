@@ -1,0 +1,12 @@
+{
+    "name": "polkadotxcm_currentmigration",
+    "description": "The current migration's stage, if any.",
+    "client_type": "rpc",
+    "pallet_name": "PolkadotXcm",
+    "storage_item_name": "CurrentMigration",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

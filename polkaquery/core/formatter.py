@@ -42,7 +42,7 @@ def format_timestamp(unix_timestamp: int | None) -> str:
     except (ValueError, TypeError):
         return "Invalid Timestamp"
 
-def format_response_for_llm(intent_tool_name: str, subscan_data: dict, network_name: str, decimals: int, symbol: str, original_params: dict = None) -> dict:
+def format_subscan_response_for_llm(intent_tool_name: str, subscan_data: dict, network_name: str, decimals: int, symbol: str, original_params: dict = None) -> dict:
     """
     Pre-formats the raw JSON data from Subscan into a structured dictionary
     intended to be used as input for a final LLM answer synthesis step.

@@ -1,0 +1,12 @@
+{
+    "name": "statetriemigration_migrationprocess",
+    "description": "Migration progress.   This stores the snapshot of the last migrated keys. It can be set into motion and move  forward by any of the means provided by this pallet.",
+    "client_type": "rpc",
+    "pallet_name": "StateTrieMigration",
+    "storage_item_name": "MigrationProcess",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

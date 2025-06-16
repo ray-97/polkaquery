@@ -1,0 +1,12 @@
+{
+    "name": "parachainsystem_hrmpwatermark",
+    "description": "HRMP watermark that was set in a block.   This will be cleared in `on_initialize` of each new block.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "HrmpWatermark",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

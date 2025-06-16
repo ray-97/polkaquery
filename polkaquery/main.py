@@ -22,6 +22,7 @@ import json
 from contextlib import asynccontextmanager 
 import google.generativeai as genai 
 import traceback # For printing full tracebacks
+from substrateinterface import SubstrateInterface
 
 # Attempt to import TavilyClient
 try:
@@ -33,12 +34,14 @@ except ImportError:
 
 load_dotenv()
 SUBSCAN_API_KEY = os.getenv("SUBSCAN_API_KEY")
+ONFINALITY_API_KEY= os.getenv("ONFINALITY_API_KEY")
 GOOGLE_GEMINI_API_KEY = os.getenv("GOOGLE_GEMINI_API_KEY")
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY") # For Tavily integration
 
 from polkaquery.core.network_config import SUPPORTED_NETWORKS, DEFAULT_NETWORK
-from polkaquery.core.formatter import format_response_for_llm
+from polkaquery.core.formatter import format_subscan_response_for_llm, format_assethub_response_for_llm
 from polkaquery.data_sources.subscan_client import call_subscan_api
+from polkaquery.data_sources.assethub_rpc_client import execute_assethub_rpc_query
 from polkaquery.intent_recognition.llm_based.gemini_recognizer import recognize_intent_with_gemini_llm
 
 # --- Tavily Client Initialization ---
@@ -60,7 +63,7 @@ else: # TavilyClient is available but no API key
 async def perform_internet_search(search_query: str) -> dict:
     """
     Performs an internet search using Tavily or another search API.
-    Returns a dictionary suitable for format_response_for_llm.
+    Returns a dictionary suitable for format_subscan_response_for_llm.
     """
     print(f"Performing internet search for: '{search_query}'")
     if tavily_client: # Check if client was initialized
@@ -132,21 +135,41 @@ async def perform_internet_search(search_query: str) -> dict:
         }
 # --- End Internet Search Client ---
 
-http_client_instance = None
+# --- Globals for client instances ---
+http_client_instance: httpx.AsyncClient | None = None
+assethub_rpc_client_instance: SubstrateInterface | None = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+
+    if not SUBSCAN_API_KEY: print("Warning: SUBSCAN_API_KEY not set.")
     global http_client_instance
     print("Application startup: Initializing HTTP client...")
     http_client_instance = httpx.AsyncClient(timeout=20.0)
-    if not SUBSCAN_API_KEY: print("Warning: SUBSCAN_API_KEY not set.")
+
+
+    if not ONFINALITY_API_KEY: print("Warning: ONFINALITY_API_KEY not set.")
+    global assethub_rpc_client_instance
+    if ONFINALITY_API_KEY:
+        assethub_ws_url = f"wss://statemint.api.onfinality.io/ws?apikey={ONFINALITY_API_KEY}"
+        try:
+            assethub_rpc_client_instance = SubstrateInterface(url=assethub_ws_url)
+            assethub_rpc_client_instance.init_runtime()
+            print(f"INFO: AssetHub RPC client connected via API Key.")
+        except Exception as e:
+            print(f"CRITICAL ERROR: Could not connect AssetHub RPC client on startup. Error: {e}")
+            traceback.print_exc()
+            assethub_rpc_client_instance = None # Ensure it's None on failure
+    else:
+        print("WARNING: ONFINALITY_API_KEY not found. AssetHub RPC client not initialized.")
+
     if GOOGLE_GEMINI_API_KEY:
         try:
             genai.configure(api_key=GOOGLE_GEMINI_API_KEY)
             print("Google Gemini API configured successfully.")
         except Exception as e: print(f"Error configuring Google Gemini API: {e}")
     else: print("Warning: GOOGLE_GEMINI_API_KEY not set.")
-    
+
     if not TAVILY_API_KEY: 
         print("Warning: TAVILY_API_KEY not set. Internet search will use placeholders.")
     elif not TavilyClient:
@@ -156,9 +179,15 @@ async def lifespan(app: FastAPI):
 
     print("Polkaquery application started.")
     yield
-    print("\nApplication shutdown: Closing HTTP client...")
-    if http_client_instance: await http_client_instance.aclose()
-    print("Polkaquery application shut down.")
+
+    # --- Shutdown ---
+    if http_client_instance:
+        await http_client_instance.aclose()
+        print("INFO: HTTP client shut down.")
+        
+    if assethub_rpc_client_instance and assethub_rpc_client_instance.websocket:
+        assethub_rpc_client_instance.close()
+        print("INFO: AssetHub RPC client connection closed.")
 
 app = FastAPI(
     title="Polkaquery LLM",
@@ -210,7 +239,7 @@ async def generate_final_llm_answer(original_query: str, network_context: str, p
 
 async def _process_llm_query_logic(
     raw_query: str, network_name_input: str, network_name_lower:str,
-    client: httpx.AsyncClient
+    client: httpx.AsyncClient, substrate_rpc_client: SubstrateInterface
 ):
     network_config = SUPPORTED_NETWORKS[network_name_lower]
     subscan_base_url = network_config["base_url"]
@@ -239,7 +268,7 @@ async def _process_llm_query_logic(
             search_query_for_tool = params.get("search_query", raw_query) 
             api_response_json = await perform_internet_search(search_query_for_tool)
             
-            processed_data_for_final_llm = format_response_for_llm(
+            processed_data_for_final_llm = format_subscan_response_for_llm(
                 intent_tool_name=intent_tool_name, 
                 subscan_data=api_response_json, 
                 network_name=network_name_lower, 
@@ -256,7 +285,7 @@ async def _process_llm_query_logic(
                 params=params,
                 api_key=SUBSCAN_API_KEY
             )
-            processed_data_for_final_llm = format_response_for_llm(
+            processed_data_for_final_llm = format_subscan_response_for_llm(
                 intent_tool_name=intent_tool_name,
                 subscan_data=api_response_json,
                 network_name=network_name_lower,
@@ -265,7 +294,12 @@ async def _process_llm_query_logic(
                 original_params=params
             )
         elif network_name_lower == "assethub-polkadot-rpc" and intent_tool_name and intent_tool_name != "unknown":
-            pass
+            api_response_json = execute_assethub_rpc_query(
+                substrate_client=substrate_rpc_client,
+                intent_tool_name=intent_tool_name,
+                params=params
+            )
+            processed_data_for_final_llm = format_assethub_response_for_llm(api_response_json)
         else: 
              # This case should ideally be caught by the "unknown" check above
              # or by the recognizer returning an error if the tool name is invalid.
@@ -322,9 +356,10 @@ async def handle_llm_query(query_body: dict = Body(...)):
         raise HTTPException(status_code=400, detail=f"Unsupported network: '{network_name_input}'. Supported: {list(SUPPORTED_NETWORKS.keys())}")
     
     if not http_client_instance:
-        print("CRITICAL ERROR: HTTP client not initialized.")
-        async with httpx.AsyncClient(timeout=20.0) as fallback_client:
-             return await _process_llm_query_logic(raw_query, network_name_input, network_name_lower, fallback_client)
-    else:
-        return await _process_llm_query_logic(raw_query, network_name_input, network_name_lower, http_client_instance)
+        raise HTTPException(status_code=503, detail="HTTP client is not available. Please try again later.")
+    if network_name_lower == "assethub-polkadot-rpc" and not assethub_rpc_client_instance:
+        raise HTTPException(status_code=503, detail="AssetHub RPC client is not available. Please try again later.")
+
+    return await _process_llm_query_logic(
+        raw_query, network_name_input, network_name_lower, http_client_instance, assethub_rpc_client_instance)
 

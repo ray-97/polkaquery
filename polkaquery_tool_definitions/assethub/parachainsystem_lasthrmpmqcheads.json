@@ -1,0 +1,12 @@
+{
+    "name": "parachainsystem_lasthrmpmqcheads",
+    "description": "The message queue chain heads we have observed per each channel incoming channel.   This value is loaded before and saved after processing inbound downward messages carried  by the system inherent.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "LastHrmpMqcHeads",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "parachainsystem_unincludedsegment",
+    "description": "Latest included block descendants the runtime accepted. In other words, these are  ancestors of the currently executing block which have not been included in the observed  relay-chain state.   The segment length is limited by the capacity returned from the [`ConsensusHook`] configured  in the pallet.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "UnincludedSegment",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

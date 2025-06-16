@@ -1,0 +1,29 @@
+{
+    "name": "uniques_account",
+    "description": "The items held by any given account; set out this way so that items owned by a single  account can be enumerated.",
+    "client_type": "rpc",
+    "pallet_name": "Uniques",
+    "storage_item_name": "Account",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            },
+            "key2": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            },
+            "key3": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            }
+        },
+        "required": [
+            "key1",
+            "key2",
+            "key3"
+        ]
+    }
+}

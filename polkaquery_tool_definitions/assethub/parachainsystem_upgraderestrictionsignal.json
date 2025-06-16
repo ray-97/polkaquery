@@ -1,0 +1,12 @@
+{
+    "name": "parachainsystem_upgraderestrictionsignal",
+    "description": "An option which indicates if the relay-chain restricts signalling a validation code upgrade.  In other words, if this is `Some` and [`NewValidationCode`] is `Some` then the produced  candidate will be invalid.   This storage item is a mirror of the corresponding value for the current parachain from the  relay-chain. This value is ephemeral which means it doesn't hit the storage. This value is  set after the inherent.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "UpgradeRestrictionSignal",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}
