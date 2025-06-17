@@ -53,7 +53,17 @@ else:
     print(f"Warning: Subscan tools directory not found at {TOOLS_DIR_PATH_SUBSCAN}.")
 
 # Load AssetHub tools
-
+if TOOLS_DIR_PATH_ASSETHUB.is_dir():
+    for tool_file_path in glob.glob(str(TOOLS_DIR_PATH_ASSETHUB / "*.json")):
+        try:
+            with open(tool_file_path, 'r') as f:
+                tool_definition = json.load(f)
+                AVAILABLE_ASSETHUB_TOOLS.append(tool_definition)
+        except Exception as e:
+            print(f"Warning: Error loading AssetHub tool file {tool_file_path}: {e}")
+    print(f"Gemini Recognizer: Loaded {len(AVAILABLE_ASSETHUB_TOOLS)} AssetHub tools from: {TOOLS_DIR_PATH_ASSETHUB}")
+else:
+    print(f"Warning: AssetHub tools directory not found at {TOOLS_DIR_PATH_ASSETHUB}.")
 
 # Define and add the Internet Search tool
 INTERNET_SEARCH_TOOL = {
@@ -79,13 +89,13 @@ AVAILABLE_ASSETHUB_TOOLS.append(INTERNET_SEARCH_TOOL)
 def llm_instruction_by_network(network_name: str) -> str:
     if network_name == "assethub-polkadot-rpc":
         return """
-        Instructions:
-        1.  Analyze the User Query within the Polkadot AssetHub context. You have access to a specialized set of RPC tools for querying on-chain data directly from AssetHub.
-        2.  Prioritize RPC Tools for On-Chain Data. If the query asks for specific on-chain information about assets, NFTs, collections, or account balances on AssetHub, choose the most appropriate RPC tool (e.g., `assets_asset`, `assets_account`, `uniques_class`). These tools are for direct data retrieval.
-        3.  Use `internet_search` for General Knowledge. If the query is broad, conceptual (e.g., "what is an NFT?", "how does asset conversion work?"), about news, or asks for information not available as a direct storage query, choose the `internet_search` tool.
-        4.  Extract Parameters Carefully. For RPC tools, you must extract the required keys. For example, `assets_account` requires both an asset ID (`key1`) and an account address (`key2`). For `internet_search`, formulate a clear `search_query`.
-        5.  Handle Ambiguity. If a query is ambiguous or if required parameters (like an asset ID) are missing, respond with `{"intent": "unknown", "parameters": {"reason": "Missing required parameters like asset_id."}}`.
-        6. Respond ONLY with a single, valid JSON object: {{"intent": "chosen_tool_name", "parameters": {{"param_name": "value"}}}}.
+        1.  **Analyze the User Query within the Polkadot AssetHub context.** Your primary goal is to match the user's request to a specific on-chain data tool if possible.
+        2.  **Prioritize RPC Tools for On-Chain Data.** The available tools (e.g., `assets_asset`, `assets_account`) are for direct RPC queries.
+            - If the query contains "asset" and a number (e.g., "asset 1984", "details for asset 1337"), you MUST choose the `assets_asset` tool and extract the number as `key1`.
+            - If the query asks for a "balance" of a specific asset for an "account", you MUST choose the `assets_account` tool and extract the asset ID as `key1` and the account address as `key2`.
+        3.  **Use `internet_search` ONLY as a fallback.** Only choose `internet_search` if the query is purely conceptual (e.g., "what is an NFT?"), asks for news, or is about a topic with no corresponding on-chain data tool. DO NOT use `internet_search` if a specific data tool fits.
+        4.  **Extract Parameters.** You must extract all required parameters for the chosen tool.
+        5.  **Respond with JSON only.** Your final output must be a single, valid JSON object in the format: `{"intent": "chosen_tool_name", "parameters": {"param_name": "value"}}`.
         """
     else:
         return """
@@ -115,9 +125,10 @@ async def recognize_intent_with_gemini_llm(query: str, network_name: str) -> tup
     model = genai.GenerativeModel('gemini-1.5-flash')
     
     instructions = llm_instruction_by_network(network_name)
+    available_tools = select_available_tools_by_network(network_name)
 
     tools_prompt_section = "AVAILABLE TOOLS (CHOOSE ONE):\n"
-    for tool in select_available_tools_by_network(network_name):
+    for tool in available_tools:
         tools_prompt_section += f"- Name: {tool.get('name', 'Unnamed Tool')}\n"
         tools_prompt_section += f"  Description: {tool.get('description', 'No description.')}\n"
         if tool.get('parameters') and tool['parameters'].get('properties'):
@@ -156,9 +167,9 @@ async def recognize_intent_with_gemini_llm(query: str, network_name: str) -> tup
         if not intent_tool_name: return "unknown", {"reason": "LLM did not specify an intent/tool."}
         if intent_tool_name == "unknown": return "unknown", extracted_params 
 
-        chosen_tool_def = next((t for t in AVAILABLE_SUBSCAN_TOOLS if t.get("name") == intent_tool_name), None)
+        chosen_tool_def = next((t for t in available_tools if t.get("name") == intent_tool_name), None)
         if not chosen_tool_def:
-            return "unknown", {"reason": f"LLM chose a non-existent tool: '{intent_tool_name}'. Available tools: {[t.get('name') for t in AVAILABLE_SUBSCAN_TOOLS]}"}
+            return "unknown", {"reason": f"LLM chose a non-existent tool: '{intent_tool_name}'. Available tools: {[t.get('name') for t in available_tools]}"}
 
         missing_required_params = []
         tool_param_schema = chosen_tool_def.get("parameters", {})
