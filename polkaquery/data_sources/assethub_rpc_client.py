@@ -24,7 +24,7 @@ import json
 import pathlib
 
 # Define the base path to the RPC tool definitions directory
-TOOLS_DIR_PATH = pathlib.Path(__file__).resolve().parent.parent / "polkaquery_tool_definitions" / "assethub"
+TOOLS_DIR_PATH = pathlib.Path(__file__).resolve().parent.parent.parent / "polkaquery_tool_definitions" / "assethub"
 
 def load_rpc_tool_definition(intent_tool_name: str) -> dict:
     """
@@ -83,9 +83,9 @@ def execute_assethub_rpc_query(substrate_client: SubstrateInterface, intent_tool
         print(f"INFO [execute_assethub_rpc_query]: Querying {pallet_name}.{storage_item_name} with params: {ordered_params}")
         
         result = substrate_client.query(
-            pallet=pallet_name,
-            storage_item=storage_item_name,
-            params=ordered_params
+            pallet_name,
+            storage_item_name,
+            ordered_params
         )
         
         # The result object has a .value attribute containing the data.
