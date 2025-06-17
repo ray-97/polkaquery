@@ -301,7 +301,11 @@ async def _process_llm_query_logic(
                 intent_tool_name=intent_tool_name,
                 params=params
             )
-            processed_data_for_final_llm = format_assethub_response_for_llm(api_response_json)
+            processed_data_for_final_llm = format_assethub_response_for_llm(
+                api_response_json, 
+                intent_tool_name, 
+                params
+            )
         else: 
              # This case should ideally be caught by the "unknown" check above
              # or by the recognizer returning an error if the tool name is invalid.
