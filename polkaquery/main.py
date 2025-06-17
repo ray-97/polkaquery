@@ -242,9 +242,11 @@ async def _process_llm_query_logic(
     client: httpx.AsyncClient, substrate_rpc_client: SubstrateInterface
 ):
     network_config = SUPPORTED_NETWORKS[network_name_lower]
-    subscan_base_url = network_config["base_url"]
     decimals = network_config["decimals"]
     symbol = network_config["symbol"]
+
+    if network_name_lower != "assethub-polkadot-rpc":
+        subscan_base_url = network_config["base_url"]
     
     processed_data_for_final_llm = None
     data_source_type = "Unknown"
@@ -355,9 +357,14 @@ async def handle_llm_query(query_body: dict = Body(...)):
     if network_name_lower not in SUPPORTED_NETWORKS:
         raise HTTPException(status_code=400, detail=f"Unsupported network: '{network_name_input}'. Supported: {list(SUPPORTED_NETWORKS.keys())}")
     
-    if not http_client_instance:
-        raise HTTPException(status_code=503, detail="HTTP client is not available. Please try again later.")
-    if network_name_lower == "assethub-polkadot-rpc" and not assethub_rpc_client_instance:
+    is_rpc_network = network_name_lower == "assethub-polkadot-rpc"
+
+    if not is_rpc_network and not http_client_instance:
+        print("CRITICAL ERROR: HTTP client not initialized.")
+        async with httpx.AsyncClient(timeout=20.0) as fallback_client:
+             return await _process_llm_query_logic(raw_query, network_name_input, network_name_lower, fallback_client, None)
+
+    if is_rpc_network and not assethub_rpc_client_instance:
         raise HTTPException(status_code=503, detail="AssetHub RPC client is not available. Please try again later.")
 
     return await _process_llm_query_logic(
