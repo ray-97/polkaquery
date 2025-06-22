@@ -348,6 +348,7 @@ async def handle_llm_query(query_body: dict = Body(...)):
     """
 
     raw_query = query_body.get("query")
+    raw_query_lower = raw_query.lower() if raw_query else ""
 
     network_name_input = query_body.get("network", DEFAULT_NETWORK) # network for fetching data
     if not raw_query: raise HTTPException(status_code=400, detail="Query field is missing.")
@@ -356,7 +357,7 @@ async def handle_llm_query(query_body: dict = Body(...)):
     if "subscan" not in raw_query_lower:
         # Define keywords that indicate the query is about AssetHub.
         rpc_keywords = ["assethub", "statemint", "statemine"]
-        if any(keyword in raw_query.lower() for keyword in rpc_keywords):
+        if any(keyword in raw_query_lower for keyword in rpc_keywords):
             network_name_input = "assethub-polkadot-rpc"
 
     network_name_lower = network_name_input.lower()
