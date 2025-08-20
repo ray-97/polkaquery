@@ -14,77 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import os
 import json
 import google.generativeai as genai
-from dotenv import load_dotenv
-import pathlib 
-import glob 
 import traceback
-
-load_dotenv()
-GOOGLE_GEMINI_API_KEY = os.getenv("GOOGLE_GEMINI_API_KEY")
-
-if GOOGLE_GEMINI_API_KEY:
-    try:
-        genai.configure(api_key=GOOGLE_GEMINI_API_KEY)
-    except Exception as e:
-        print(f"Error configuring Gemini API in gemini_recognizer.py: {e}")
-else:
-    print("Warning: GOOGLE_GEMINI_API_KEY not found for gemini_recognizer. LLM queries might fail.")
-
-AVAILABLE_SUBSCAN_TOOLS = []
-AVAILABLE_ASSETHUB_TOOLS = []
-
-TOOLS_DIR_PATH_SUBSCAN = pathlib.Path(__file__).resolve().parent.parent.parent.parent / "polkaquery_tool_definitions" / "subscan"
-TOOLS_DIR_PATH_ASSETHUB = pathlib.Path(__file__).resolve().parent.parent.parent.parent / "polkaquery_tool_definitions" / "assethub"
-
-# Load Subscan tools
-if TOOLS_DIR_PATH_SUBSCAN.is_dir():
-    for tool_file_path in glob.glob(str(TOOLS_DIR_PATH_SUBSCAN / "*.json")):
-        try:
-            with open(tool_file_path, 'r') as f:
-                tool_definition = json.load(f)
-                AVAILABLE_SUBSCAN_TOOLS.append(tool_definition)
-        except Exception as e:
-            print(f"Warning: Error loading tool file {tool_file_path}: {e}")
-    print(f"Gemini Recognizer: Loaded {len(AVAILABLE_SUBSCAN_TOOLS)} Subscan tools from: {TOOLS_DIR_PATH_SUBSCAN}")
-else:
-    print(f"Warning: Subscan tools directory not found at {TOOLS_DIR_PATH_SUBSCAN}.")
-
-# Load AssetHub tools
-if TOOLS_DIR_PATH_ASSETHUB.is_dir():
-    for tool_file_path in glob.glob(str(TOOLS_DIR_PATH_ASSETHUB / "*.json")):
-        try:
-            with open(tool_file_path, 'r') as f:
-                tool_definition = json.load(f)
-                AVAILABLE_ASSETHUB_TOOLS.append(tool_definition)
-        except Exception as e:
-            print(f"Warning: Error loading AssetHub tool file {tool_file_path}: {e}")
-    print(f"Gemini Recognizer: Loaded {len(AVAILABLE_ASSETHUB_TOOLS)} AssetHub tools from: {TOOLS_DIR_PATH_ASSETHUB}")
-else:
-    print(f"Warning: AssetHub tools directory not found at {TOOLS_DIR_PATH_ASSETHUB}.")
-
-# Define and add the Internet Search tool
-INTERNET_SEARCH_TOOL = {
-  "name": "internet_search",
-  "description": "Performs a general internet search to find information when the user's query is broad, asks for general knowledge, explanations, news, or topics not covered by specific blockchain data APIs (like Subscan tools). Use this if no specific Subscan tool directly matches the query's intent for on-chain data.",
-  "api_path": None, # Not a Subscan API
-  "api_method": None, # Not a Subscan API
-  "parameters": {
-    "type": "object",
-    "properties": {
-      "search_query": {
-        "type": "string",
-        "description": "A concise and effective search query derived from the user's original question, suitable for a web search engine."
-      }
-    },
-    "required": ["search_query"]
-  },
-  "response_schema_description": "Returns a text summary of relevant information found on the internet."
-}
-AVAILABLE_SUBSCAN_TOOLS.append(INTERNET_SEARCH_TOOL)
-AVAILABLE_ASSETHUB_TOOLS.append(INTERNET_SEARCH_TOOL)
 
 def llm_instruction_by_network(network_name: str) -> str:
     if network_name == "assethub-polkadot-rpc":
@@ -108,24 +40,18 @@ def llm_instruction_by_network(network_name: str) -> str:
         6. Respond ONLY with a single, valid JSON object: {{"intent": "chosen_tool_name", "parameters": {{"param_name": "value"}}}}.
         """
     
-def select_available_tools_by_network(network_name: str) -> list:
-    if network_name == "assethub-polkadot-rpc":
-        return AVAILABLE_ASSETHUB_TOOLS
-    else:
-        return AVAILABLE_SUBSCAN_TOOLS
-
-async def recognize_intent_with_gemini_llm(query: str, network_name: str) -> tuple[str, dict]:
-    if not GOOGLE_GEMINI_API_KEY:
-        return "unknown", {"reason": "Google Gemini API Key not configured."}
-    if not AVAILABLE_SUBSCAN_TOOLS: # Should at least have internet_search
+async def recognize_intent_with_gemini_llm(
+    query: str, 
+    network_name: str, 
+    model: genai.GenerativeModel, 
+    available_tools: list[dict]
+) -> tuple[str, dict]:
+    if not model:
+        return "unknown", {"reason": "Google Gemini model is not available."}
+    if not available_tools:
         return "unknown", {"reason": "No API tools (including internet search) loaded for LLM to use."}
-    if not AVAILABLE_ASSETHUB_TOOLS:
-        return "unknown", {"reason": "No AssetHub API tools (including internet search) loaded for LLM to use."}
 
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    
     instructions = llm_instruction_by_network(network_name)
-    available_tools = select_available_tools_by_network(network_name)
 
     tools_prompt_section = "AVAILABLE TOOLS (CHOOSE ONE):\n"
     for tool in available_tools:

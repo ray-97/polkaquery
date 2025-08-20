@@ -16,52 +16,24 @@
 
 import httpx
 from fastapi import HTTPException
-import json
-import pathlib
-import glob # For finding all .json files in a directory
 
-# --- Load Tool Definitions to get API paths/methods ---
-TOOLS_MAP = {}
-# Path to the directory containing individual tool JSON files.
-# This assumes subscan_client.py is in polkaquery/data_sources/
-# and polkaquery_tool_definitions/ is in the project root.
-TOOLS_DIR_PATH_CLIENT = pathlib.Path(__file__).resolve().parent.parent.parent / "polkaquery_tool_definitions" / "subscan"
-
-if TOOLS_DIR_PATH_CLIENT.is_dir():
-    for tool_file_path in glob.glob(str(TOOLS_DIR_PATH_CLIENT / "*.json")):
-        try:
-            with open(tool_file_path, 'r') as f:
-                tool_definition = json.load(f)
-                tool_name = tool_definition.get("name")
-                if tool_name:
-                    TOOLS_MAP[tool_name] = tool_definition
-                else:
-                    print(f"Warning: Tool definition in {tool_file_path} is missing a 'name'.")
-        except json.JSONDecodeError:
-            print(f"Warning: Error decoding JSON from tool file for client: {tool_file_path}")
-        except Exception as e:
-            print(f"Warning: Error loading tool file for client {tool_file_path}: {e}")
-    print(f"Subscan client loaded {len(TOOLS_MAP)} tools into TOOLS_MAP from: {TOOLS_DIR_PATH_CLIENT}")
-else:
-    print(f"Warning: Tools directory not found for Subscan client at {TOOLS_DIR_PATH_CLIENT}. API calls via tool name will fail.")
-# --- End Load Tool Definitions ---
-
-
-async def call_subscan_api(client: httpx.AsyncClient, base_url: str, intent_tool_name: str, params: dict, api_key: str | None) -> dict:
+async def call_subscan_api(
+    client: httpx.AsyncClient, 
+    base_url: str, 
+    tool_definition: dict, 
+    params: dict, 
+    api_key: str | None
+) -> dict:
     """
-    Calls the appropriate Subscan API endpoint based on the intent_tool_name,
-    using API path and method from loaded tool definitions.
+    Calls the appropriate Subscan API endpoint based on the provided tool_definition.
     """
     headers = {"Content-Type": "application/json"}
     if api_key:
         headers["X-API-Key"] = api_key
     else:
-        print("Warning: Subscan API key not provided for call_subscan_api (tool mode).")
+        print("Warning: Subscan API key not provided for call_subscan_api.")
 
-    tool_definition = TOOLS_MAP.get(intent_tool_name)
-    if not tool_definition:
-        raise HTTPException(status_code=400, detail=f"Unknown intent/tool name '{intent_tool_name}' provided to Subscan client. Available: {list(TOOLS_MAP.keys())}")
-
+    intent_tool_name = tool_definition.get("name", "unnamed_tool")
     api_path = tool_definition.get("api_path")
     api_method = tool_definition.get("api_method", "POST").upper() 
 

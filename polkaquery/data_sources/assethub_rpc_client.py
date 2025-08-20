@@ -20,54 +20,28 @@ using a pre-initialized SubstrateInterface client.
 """
 from substrateinterface import SubstrateInterface
 import traceback
-import json
-import pathlib
 
-# Define the base path to the RPC tool definitions directory
-TOOLS_DIR_PATH = pathlib.Path(__file__).resolve().parent.parent.parent / "polkaquery_tool_definitions" / "assethub"
-
-def load_rpc_tool_definition(intent_tool_name: str) -> dict:
+def execute_assethub_rpc_query(
+    substrate_client: SubstrateInterface, 
+    tool_definition: dict, 
+    params: dict
+) -> dict:
     """
-    Loads the JSON tool definition for a given RPC tool name.
-
-    Args:
-        intent_tool_name: The name of the tool, corresponding to the JSON filename.
-
-    Returns:
-        A dictionary containing the tool definition.
-
-    Raises:
-        FileNotFoundError: If the tool definition JSON file cannot be found.
-    """
-    tool_file_path = TOOLS_DIR_PATH / f"{intent_tool_name}.json"
-    if not tool_file_path.is_file():
-        raise FileNotFoundError(f"RPC tool definition not found: {tool_file_path}")
-    
-    with open(tool_file_path, 'r') as f:
-        return json.load(f)
-
-def execute_assethub_rpc_query(substrate_client: SubstrateInterface, intent_tool_name: str, params: dict) -> dict:
-    """
-    Executes a storage query using a provided Substrate client instance by
-    first loading the appropriate tool definition.
+    Executes a storage query using a provided Substrate client instance and tool definition.
 
     Args:
         substrate_client: An active and initialized SubstrateInterface instance.
-        intent_tool_name: The name of the tool to execute, corresponding to a JSON file.
+        tool_definition: The dictionary containing the tool definition.
         params: A dictionary of parameters extracted by the LLM.
 
     Returns:
-        .A dictionary containing the query result or an error message
+        A dictionary containing the query result or an error message.
     """
     if not substrate_client:
         print("ERROR [execute_assethub_rpc_query]: Substrate client is not provided or initialized.")
         return {"error": "Substrate client is not available."}
 
-    try:
-        tool_definition = load_rpc_tool_definition(intent_tool_name)
-    except FileNotFoundError as e:
-        print(f"ERROR [execute_assethub_rpc_query]: {e}")
-        return {"error": str(e)}
+    intent_tool_name = tool_definition.get("name", "unnamed_tool")
 
     pallet_name = tool_definition.get("pallet_name")
     storage_item_name = tool_definition.get("storage_item_name")
