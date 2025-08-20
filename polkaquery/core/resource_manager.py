@@ -23,6 +23,9 @@ from substrateinterface import SubstrateInterface
 import traceback
 
 from polkaquery.config import Settings
+from polkaquery.providers.base import BaseToolProvider
+from polkaquery.providers.subscan import SubscanToolProvider
+from polkaquery.providers.assethub import AssetHubToolProvider
 
 # Attempt to import TavilyClient
 try:
@@ -44,48 +47,24 @@ class ResourceManager:
         self._tavily_client: 'TavilyClient' | None = None
         self._assethub_rpc_client: SubstrateInterface | None = None
 
-        # Tool definitions are loaded at initialization
+        # Tool providers are initialized here
+        self.subscan_provider: BaseToolProvider = SubscanToolProvider(settings, self.http_client)
+        self.assethub_provider: BaseToolProvider = AssetHubToolProvider(settings)
+
+        # Tool definitions are loaded via the providers on startup
         self.subscan_tools: dict[str, dict] = {}
         self.assethub_tools: dict[str, dict] = {}
-        self._load_all_tools()
 
-    def _load_all_tools(self):
-        """Loads all tool definitions from the filesystem into memory."""
-        base_path = pathlib.Path(self.settings.tools_output_directory)
-        
-        # Load Subscan tools
-        subscan_path = base_path / "subscan"
-        if subscan_path.is_dir():
-            for tool_file in glob.glob(str(subscan_path / "*.json")):
-                try:
-                    with open(tool_file, 'r') as f:
-                        tool_def = json.load(f)
-                        if tool_def.get("name"):
-                            self.subscan_tools[tool_def["name"]] = tool_def
-                except Exception as e:
-                    print(f"Warning: Failed to load Subscan tool {tool_file}: {e}")
-            # Add internet search tool to subscan tools
+    async def load_tools(self):
+        """Loads tools from all providers into memory."""
+        print("INFO [ResourceManager]: Loading tools from all providers...")
+        self.subscan_tools = await self.subscan_provider.get_tools()
+        self.assethub_tools = await self.assethub_provider.get_tools()
+        # Add internet search tool after loading from providers
+        if self.subscan_tools:
             self.subscan_tools["internet_search"] = INTERNET_SEARCH_TOOL
-            print(f"INFO [ResourceManager]: Loaded {len(self.subscan_tools)} Subscan tools.")
-        else:
-            print(f"ERROR [ResourceManager]: Subscan tools directory not found at {subscan_path}")
-
-        # Load AssetHub tools
-        assethub_path = base_path / "assethub"
-        if assethub_path.is_dir():
-            for tool_file in glob.glob(str(assethub_path / "*.json")):
-                try:
-                    with open(tool_file, 'r') as f:
-                        tool_def = json.load(f)
-                        if tool_def.get("name"):
-                            self.assethub_tools[tool_def["name"]] = tool_def
-                except Exception as e:
-                    print(f"Warning: Failed to load AssetHub tool {tool_file}: {e}")
-            # Add internet search tool to assethub tools
+        if self.assethub_tools:
             self.assethub_tools["internet_search"] = INTERNET_SEARCH_TOOL
-            print(f"INFO [ResourceManager]: Loaded {len(self.assethub_tools)} AssetHub tools.")
-        else:
-            print(f"ERROR [ResourceManager]: AssetHub tools directory not found at {assethub_path}")
 
     @property
     def http_client(self) -> httpx.AsyncClient:

@@ -42,20 +42,14 @@ async def lifespan(app: FastAPI):
     Handles application startup and shutdown events.
     Initializes resources on startup and cleans them up on shutdown.
     """
-    # The ResourceManager constructor already loads tools and initializes clients lazily.
-    # We can use the lifespan to explicitly connect/disconnect network resources if needed,
-    # but for now, the lazy loading in the ResourceManager is sufficient.
     print("INFO: Polkaquery application starting up...")
-    print(f"INFO: Loaded {len(resource_manager.subscan_tools)} Subscan tools.")
-    print(f"INFO: Loaded {len(resource_manager.assethub_tools)} AssetHub tools.")
-    # You can access clients here to trigger their initialization on startup if desired
-    # e.g., `resource_manager.gemini_model`
+    # On startup, trigger the ResourceManager to load/generate all tools.
+    await resource_manager.load_tools()
+    print(f"INFO: Tool loading complete. Subscan tools: {len(resource_manager.subscan_tools)}, AssetHub tools: {len(resource_manager.assethub_tools)}.")
     
     yield
     
-    # ---
-    # Shutdown
-    # ---
+    # --- Shutdown ---
     print("INFO: Polkaquery application shutting down...")
     await resource_manager.shutdown()
 
