@@ -115,35 +115,30 @@ This architecture allows Polkaquery to use the best tool for the job, combining 
 
 ## Running Polkaquery Components
 
-### Step 1: Generate Tool Definitions
+### Step 1: Automated Tool Generation
 
-This step parses the Subscan API documentation to create structured JSON definitions for each API endpoint. These definitions are used by the LLM to understand what tools are available.
+The first time you run the Polkaquery server, it will automatically detect that the tool definition cache is empty. It will then connect to the necessary sources (Subscan's website, an AssetHub node) and generate the required `.json` tool definitions. These are saved to the `polkaquery_tool_definitions/` directory, which acts as a persistent cache.
 
-1.  Navigate to the project root (`polkaquery_project_root/`).
-2.  Run the parser script:
-    ```bash
-    python api_spec_parser.py
-    ```
-    Similarly, run the assethub tool definitions parser:
-    ```bash
-    python assethub_tool_generator.py
-    ```
-    * By default, this script might be configured to process only a specific API or a limited number for testing (check the `if __name__ == "__main__":` block in the script).
-    * To process all APIs, you might need to modify the `main()` call in `api_spec_parser.py` to `main()`. This can take some time.
-3.  This will create/populate the `polkaquery_tool_definitions/subscan` and `polkaquery_tool_definitions/assethub` directories with individual `.json` files for each parsed Subscan API.
+On all subsequent startups, the server will find these cached files and load them directly, which is much faster.
 
+To force a regeneration of the tools, simply delete the contents of the `polkaquery_tool_definitions/subscan` and `polkaquery_tool_definitions/assethub` directories before starting the server.
 
 ### Step 2: Run the Polkaquery FastAPI Server
 
 The Polkaquery server provides the `/llm-query/` endpoint that AI agents will call.
 
 1.  Ensure your `.env` file is correctly set up with `GOOGLE_GEMINI_API_KEY`, `TAVILY_API_KEY`, and `SUBSCAN_API_KEY`.
-2.  Ensure the `polkaquery_tool_definitions/subscan`and `polkaquery_tool_definitions/assethub` directory has been populated by `api_spec_parser.py`and `assethub_tool_generator.py`.
-3.  From the project root (`polkaquery_project_root/`), run:
+2.  From the project root (`polkaquery_project_root/`), run:
     ```bash
     uvicorn polkaquery.main:app --reload --port 8000
     ```
-    The server should start and be accessible at `http://127.0.0.1:8000`. You'll see startup logs indicating if API keys and tool definitions were loaded.
+    The server should start and be accessible at `http://127.0.0.1:8000`. You'll see startup logs indicating the tool generation or loading process.
+
+### Clearing the Query Cache (For Testing)
+
+Polkaquery uses an in-memory cache for API responses and LLM decisions to speed up repeated queries. Because this cache is in-memory, it is automatically cleared every time you restart the FastAPI server.
+
+**To clear the cache, simply stop and restart the `uvicorn` server process.** This is the easiest way to ensure you are getting fresh, non-cached results when testing.
 
 ### Step 3: Run Integration Examples
 

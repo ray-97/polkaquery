@@ -17,7 +17,9 @@
 import json
 import google.generativeai as genai
 import traceback
+from polkaquery.core.async_cache import async_cached, llm_cache, llm_recognizer_caching_key
 
+@async_cached(cache=llm_cache, key=llm_recognizer_caching_key)
 async def recognize_intent_with_gemini_llm(
     query: str, 
     model: genai.GenerativeModel, 

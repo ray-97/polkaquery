@@ -16,6 +16,7 @@
 
 import json
 import traceback
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Body
@@ -30,6 +31,7 @@ from polkaquery.data_sources.subscan_client import call_subscan_api
 from polkaquery.data_sources.assethub_rpc_client import execute_assethub_rpc_query
 from polkaquery.intent_recognition.llm_based.gemini_recognizer import recognize_intent_with_gemini_llm
 from polkaquery.routing import route_query_with_llm
+from polkaquery.core.async_cache import async_cached, api_cache
 
 # --- Global Resource Manager ---
 # This single instance will be used throughout the application's lifecycle.
@@ -62,6 +64,7 @@ app = FastAPI(
     lifespan=lifespan 
 )
 
+@async_cached(api_cache)
 async def perform_internet_search(search_query: str) -> dict:
     """
     Performs an internet search using the Tavily client from the ResourceManager.
@@ -180,7 +183,9 @@ async def _process_llm_query_logic(raw_query: str, network_name_input: str):
             if data_source_type == "AssetHub":
                 tool_def = resource_manager.assethub_tools.get(intent_tool_name)
                 if not tool_def: raise ValueError(f"Tool '{intent_tool_name}' not found in ResourceManager.")
-                api_response_json = execute_assethub_rpc_query(
+                # Run the synchronous, cached function in a thread to avoid blocking the event loop
+                api_response_json = await asyncio.to_thread(
+                    execute_assethub_rpc_query,
                     substrate_client=resource_manager.assethub_rpc_client,
                     tool_definition=tool_def,
                     params=params

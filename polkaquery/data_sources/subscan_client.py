@@ -16,7 +16,9 @@
 
 import httpx
 from fastapi import HTTPException
+from polkaquery.core.async_cache import async_cached, api_cache, api_call_caching_key
 
+@async_cached(cache=api_cache, key=api_call_caching_key)
 async def call_subscan_api(
     client: httpx.AsyncClient, 
     base_url: str, 

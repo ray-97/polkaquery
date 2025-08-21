@@ -20,7 +20,10 @@ using a pre-initialized SubstrateInterface client.
 """
 from substrateinterface import SubstrateInterface
 import traceback
+from cachetools import cached
+from polkaquery.core.async_cache import api_cache, api_call_caching_key
 
+@cached(cache=api_cache, key=api_call_caching_key)
 def execute_assethub_rpc_query(
     substrate_client: SubstrateInterface, 
     tool_definition: dict, 

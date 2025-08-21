@@ -16,10 +16,12 @@
 
 import google.generativeai as genai
 import traceback
+from polkaquery.core.async_cache import async_cached, llm_cache
 
 VALID_ROUTES = ["assethub", "subscan", "internet_search"]
 DEFAULT_ROUTE = "subscan"
 
+@async_cached(llm_cache)
 async def route_query_with_llm(query: str, model: genai.GenerativeModel, prompt_template: str) -> str:
     """
     Uses an LLM to determine the best data source (route) for a user query.
