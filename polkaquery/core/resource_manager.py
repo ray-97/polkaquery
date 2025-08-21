@@ -55,6 +55,28 @@ class ResourceManager:
         self.subscan_tools: dict[str, dict] = {}
         self.assethub_tools: dict[str, dict] = {}
 
+        # Prompts are loaded from files on startup
+        self.router_prompt: str = ""
+        self.tool_recognizer_prompt: str = ""
+        self.assethub_recognizer_prompt: str = ""
+        self.final_answer_prompt: str = ""
+        self._load_prompts()
+
+    def _load_prompts(self):
+        """Loads all prompt templates from the filesystem."""
+        print("INFO [ResourceManager]: Loading prompts...")
+        try:
+            prompt_dir = pathlib.Path("polkaquery/prompts")
+            self.router_prompt = (prompt_dir / "router_prompt.txt").read_text()
+            self.tool_recognizer_prompt = (prompt_dir / "tool_recognizer_prompt.txt").read_text()
+            self.assethub_recognizer_prompt = (prompt_dir / "assethub_recognizer_prompt.txt").read_text()
+            self.final_answer_prompt = (prompt_dir / "final_answer_prompt.txt").read_text()
+            print("INFO [ResourceManager]: All prompts loaded successfully.")
+        except FileNotFoundError as e:
+            print(f"ERROR [ResourceManager]: Prompt file not found: {e}. The application may not function correctly.")
+        except Exception as e:
+            print(f"ERROR [ResourceManager]: An unexpected error occurred while loading prompts: {e}")
+
     async def load_tools(self):
         """Loads tools from all providers into memory."""
         print("INFO [ResourceManager]: Loading tools from all providers...")

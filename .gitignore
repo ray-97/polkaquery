@@ -16,6 +16,7 @@ conda/
 
 ### LLM-specific ###
 gitingest_output.txt
+SESSION_CONTEXT.md
 
 # --- Python Artifacts ---
 # Byte-compiled / optimized / DLL files
@@ -116,3 +117,4 @@ logs/
 *.tmp
 *.swp
 *~
+polkaquery_tool_definitions/

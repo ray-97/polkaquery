@@ -18,40 +18,18 @@ import json
 import google.generativeai as genai
 import traceback
 
-def llm_instruction_by_network(network_name: str) -> str:
-    if network_name == "assethub-polkadot-rpc":
-        return """
-        1.  **Analyze the User Query within the Polkadot AssetHub context.** Your primary goal is to match the user's request to a specific on-chain data tool if possible.
-        2.  **Prioritize RPC Tools for On-Chain Data.** The available tools (e.g., `assets_asset`, `assets_account`) are for direct RPC queries.
-            - If the query contains "asset" and a number (e.g., "asset 1984", "details for asset 1337"), you MUST choose the `assets_asset` tool and extract the number as `key1`.
-            - If the query asks for a "balance" of a specific asset for an "account", you MUST choose the `assets_account` tool and extract the asset ID as `key1` and the account address as `key2`.
-        3.  **Use `internet_search` ONLY as a fallback.** Only choose `internet_search` if the query is purely conceptual (e.g., "what is an NFT?"), asks for news, or is about a topic with no corresponding on-chain data tool. DO NOT use `internet_search` if a specific data tool fits.
-        4.  **Extract Parameters.** You must extract all required parameters for the chosen tool.
-        5.  **Respond with JSON only.** Your final output must be a single, valid JSON object in the format: `{"intent": "chosen_tool_name", "parameters": {"param_name": "value"}}`.
-        """
-    else:
-        return """
-        Instructions:
-        1. Analyze the User Query.
-        2. If the query asks for specific on-chain data (balances, extrinsics, blocks, staking info, specific asset details, etc.) that matches a Subscan tool description, choose that tool.
-        3. If the query is broad, asks for general explanations, news, concepts (e.g., "what is staking?", "latest Polkadot news", "how do XCM transfers work conceptually?"), or information not directly available as structured on-chain data via Subscan tools, choose the "internet_search" tool.
-        4. Extract all necessary parameters for the chosen tool. For "internet_search", the "search_query" parameter should be a well-formulated version of the user's question.
-        5. If no tool (neither Subscan nor internet_search) seems appropriate, or if required parameters are missing for an otherwise suitable tool, respond with "intent": "unknown" and a "reason".
-        6. Respond ONLY with a single, valid JSON object: {{"intent": "chosen_tool_name", "parameters": {{"param_name": "value"}}}}.
-        """
-    
 async def recognize_intent_with_gemini_llm(
     query: str, 
-    network_name: str, 
     model: genai.GenerativeModel, 
-    available_tools: list[dict]
+    available_tools: list[dict],
+    prompt_template: str
 ) -> tuple[str, dict]:
     if not model:
         return "unknown", {"reason": "Google Gemini model is not available."}
     if not available_tools:
-        return "unknown", {"reason": "No API tools (including internet search) loaded for LLM to use."}
-
-    instructions = llm_instruction_by_network(network_name)
+        return "unknown", {"reason": "No API tools loaded for LLM to use."}
+    if not prompt_template:
+        return "unknown", {"reason": "Prompt template not provided."}
 
     tools_prompt_section = "AVAILABLE TOOLS (CHOOSE ONE):\n"
     for tool in available_tools:
@@ -63,19 +41,14 @@ async def recognize_intent_with_gemini_llm(
             tools_prompt_section += "  Parameters Schema: {}\n\n"
 
     prompt = f"""
-    You are an expert AI assistant for Polkaquery, specializing in the Polkadot ecosystem ({network_name}).
-    Your task is to understand user queries, select the most appropriate single tool from AVAILABLE TOOLS,
-    and extract parameters for that tool.
+    {prompt_template}
 
     {tools_prompt_section}
 
-    User Query: "{query}"
-    Target Network Context: "{network_name}"
-
-    {instructions}
-
+    User Query: \"{query}\"\n
     JSON Response:
     """
+
     try:
         generation_config = genai.types.GenerationConfig(temperature=0.0)
         response = await model.generate_content_async(prompt, generation_config=generation_config)
