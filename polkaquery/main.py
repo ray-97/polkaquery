@@ -16,6 +16,7 @@
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Body
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from polkaquery.config import settings
@@ -47,6 +48,25 @@ app = FastAPI(
     version="0.9.0 (LangGraph)", 
     lifespan=lifespan 
 )
+
+# --- CORS Middleware ---
+# This allows the frontend (running on a different domain) to communicate with the API.
+# For production, it's recommended to restrict origins to the specific domain of your frontend.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+
+# --- Health Check Endpoint ---
+@app.get("/health")
+async def health_check():
+    """
+    Simple health check endpoint to confirm the API is running.
+    """
+    return {"status": "ok"}
 
 # --- MCP Endpoint Models ---
 class MCPQueryRequest(BaseModel):
