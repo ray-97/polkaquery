@@ -48,6 +48,15 @@ app = FastAPI(
     lifespan=lifespan 
 )
 
+# --- MCP Endpoint Models ---
+class MCPQueryRequest(BaseModel):
+    query: str
+    network: str = Field(DEFAULT_NETWORK, description="Optional. The network to target.")
+
+class MCPQueryResponse(BaseModel):
+    answer: str
+
+# --- Feedback Endpoint Models ---
 class FeedbackModel(BaseModel):
     run_id: str = Field(..., description="The unique run ID from the /llm-query/ response.")
     score: int = Field(..., description="The feedback score, e.g., 1 for positive, 0 for negative.")
@@ -75,6 +84,37 @@ async def handle_feedback(feedback: FeedbackModel):
     except Exception as e:
         print(f"ERROR [main.handle_feedback]: Could not submit feedback to LangSmith: {e}")
         raise HTTPException(status_code=500, detail="Failed to submit feedback.")
+
+@app.post("/mcp/v1/query", response_model=MCPQueryResponse)
+async def handle_mcp_query(request: MCPQueryRequest):
+    """
+    Handles a query compliant with the Multi-Chain Agent Protocol (MCP).
+    """
+    # The initial state for the graph
+    initial_state = {
+        "query": request.query,
+        "network": request.network,
+    }
+
+    # The configuration for the run, passing the resource manager to all nodes
+    config = {"configurable": {"resource_manager": resource_manager}}
+
+    try:
+        final_state = None
+        # Asynchronously stream the graph execution to get the final state
+        async for event in resource_manager.app.astream_events(initial_state, config=config, version="v1"):
+            if event["event"] == "on_chain_end":
+                final_state = event["data"]["output"]
+
+        answer_node_output = final_state.get("generate_answer") or final_state.get("handle_error")
+
+        if not answer_node_output or not answer_node_output.get("final_answer"):
+            raise HTTPException(status_code=500, detail="Graph execution finished without a final answer.")
+
+        return MCPQueryResponse(answer=answer_node_output.get("final_answer"))
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred during MCP query execution: {e}")
 
 @app.post("/llm-query/")
 async def handle_llm_query(query_body: dict = Body(...)):

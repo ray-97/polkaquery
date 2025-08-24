@@ -229,7 +229,33 @@ The `images/` directory contains screenshots illustrating example interactions:
 
 These visual aids can help in understanding the expected request/response formats and the flow of information.
 
+## Agent Integrations
+
+### MCP (Multi-Chain Agent Protocol) Integration
+
+Polkaquery now supports MCP, allowing it to be used as a standard tool by other compliant AI agents in the Polkadot ecosystem.
+
+*   **Tool Specification:** The tool's capabilities are described in the `mcp_tool_spec.json` file in the project root. This file can be served to other agents to allow them to automatically discover and configure Polkaquery.
+*   **Endpoint:** The MCP-compliant endpoint is available at `POST /mcp/v1/query`.
+
+#### Example Usage with Postman
+
+You can test the MCP endpoint using a graphical API client like Postman:
+
+1.  **Method:** `POST`
+2.  **URL:** `http://127.0.0.1:8000/mcp/v1/query`
+3.  **Headers:** Set `Content-Type` to `application/json`.
+4.  **Body:** Select the `raw` JSON option and enter the following payload:
+
+```json
+{
+  "query": "What is the total issuance of DOT?",
+  "network": "polkadot"
+}
+```
+
 ## Future Enhancements (Roadmap Ideas)
+
 
 * **Agentic Multi-Step Reasoning:** Implement a more advanced agentic loop in `main.py` to allow Polkaquery to make multiple tool calls sequentially to answer complex queries.
 * **Expanded Toolset:** Parse and integrate all available Subscan API endpoints.
