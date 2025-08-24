@@ -1,0 +1,12 @@
+{
+    "name": "session_disabledvalidators",
+    "description": "Indices of disabled validators.   The vec is always kept sorted so that we can find whether a given validator is  disabled using binary search. It gets cleared when `on_session_ending` returns  a new set of identities.",
+    "client_type": "rpc",
+    "pallet_name": "Session",
+    "storage_item_name": "DisabledValidators",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "name": "xcmpqueue_queueconfig",
+    "description": "The configuration which controls the dynamics of the outbound queue.",
+    "client_type": "rpc",
+    "pallet_name": "XcmpQueue",
+    "storage_item_name": "QueueConfig",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

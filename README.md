@@ -12,7 +12,7 @@
     * [Environment Setup](#environment-setup)
     * [API Keys](#api-keys)
 4.  [Running Polkaquery Components](#running-polkaquery-components)
-    * [Step 1: Generate Subscan API Tool Definitions](#step-1-generate-subscan-api-tool-definitions)
+    * [Step 1: Generate Tool Definitions](#step-1-generate-tool-definitions)
     * [Step 2: Run the Polkaquery FastAPI Server](#step-2-run-the-polkaquery-fastapi-server)
     * [Step 3: Run Integration Examples](#step-3-run-integration-examples)
         * [Langchain Client with Google Gemini](#langchain-client-with-google-gemini)
@@ -35,7 +35,19 @@ Polkaquery is a specialized search engine designed for the Polkadot ecosystem. I
 
 The primary goal is to enable AI agents to easily access and understand Polkadot blockchain data, functioning similarly to how tools like Tavily Search provide general web search capabilities to agents. This project aims to fulfill the deliverables outlined in the Web3 Foundation Founders Software Grant Agreement, focusing on creating data loaders and function tools for LLM interaction with on-chain data.
 
-This version uses a Large Language Model (LLM), specifically Google Gemini, for advanced intent recognition, tool selection (from Subscan APIs and internet search via Tavily), and final answer synthesis.
+##### Architecture Overview
+Polkaquery now features a sophisticated dual-client architecture to provide comprehensive data from the Polkadot ecosystem.
+1. Subscan Client: The primary client for a broad range of on-chain data across multiple networks supported by Subscan's powerful APIs. This is used for queries related to blocks, extrinsics, staking, and general account information on most parachains.
+
+2. AssetHub RPC Client: A specialized client that connects directly to an AssetHub node's WebSocket endpoint (via OnFinality). This provides deep, specific access to the Assets and Uniques pallets, allowing for detailed queries about fungible tokens and NFTs that are not available through the general Subscan API.
+
+##### Automatic Routing
+When a query is received, Polkaquery uses a keyword-based routing mechanism:
+- If the query contains terms like assethub, statemint, or statemine, it is automatically routed to the AssetHub RPC Client.
+- If the user explicitly includes the word subscan in their query, it will be forced to use the Subscan Client.
+- Otherwise, the query defaults to using the general-purpose Subscan Client.
+This architecture allows Polkaquery to use the best tool for the job, combining the breadth of Subscan with the depth of direct RPC access.
+
 
 ## Features
 
@@ -93,6 +105,7 @@ This version uses a Large Language Model (LLM), specifically Google Gemini, for 
     SUBSCAN_API_KEY=YOUR_SUBSCAN_API_KEY_HERE         # For Subscan API calls; highly recommended for reliable data.
     GOOGLE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY_HERE  # Required for Polkaquery server's core LLM functions & Langchain Gemini example.
     TAVILY_API_KEY=YOUR_TAVILY_API_KEY_HERE         # Required for the internet search functionality.
+    ONFINALITY_API_KEY=ONFINALITY_API_KEY_HERE     # Required, for AssetHub RPC Client (if using AssetHub).
     # OLLAMA_BASE_URL=http://localhost:11434        # Optional, if Ollama runs on a different host/port
     # OLLAMA_MODEL=phi3:mini                        # Optional, default model for Ollama client example
     ```
@@ -102,30 +115,30 @@ This version uses a Large Language Model (LLM), specifically Google Gemini, for 
 
 ## Running Polkaquery Components
 
-### Step 1: Generate Subscan API Tool Definitions
+### Step 1: Automated Tool Generation
 
-This step parses the Subscan API documentation to create structured JSON definitions for each API endpoint. These definitions are used by the LLM to understand what tools are available.
+The first time you run the Polkaquery server, it will automatically detect that the tool definition cache is empty. It will then connect to the necessary sources (Subscan's website, an AssetHub node) and generate the required `.json` tool definitions. These are saved to the `polkaquery_tool_definitions/` directory, which acts as a persistent cache.
 
-1.  Navigate to the project root (`polkaquery_project_root/`).
-2.  Run the parser script:
-    ```bash
-    python api_spec_parser.py
-    ```
-    * By default, this script might be configured to process only a specific API or a limited number for testing (check the `if __name__ == "__main__":` block in the script).
-    * To process all APIs, you might need to modify the `main()` call in `api_spec_parser.py` to `main()`. This can take some time.
-3.  This will create/populate the `polkaquery_tool_definitions/` directory with individual `.json` files for each parsed Subscan API.
+On all subsequent startups, the server will find these cached files and load them directly, which is much faster.
+
+To force a regeneration of the tools, simply delete the contents of the `polkaquery_tool_definitions/subscan` and `polkaquery_tool_definitions/assethub` directories before starting the server.
 
 ### Step 2: Run the Polkaquery FastAPI Server
 
 The Polkaquery server provides the `/llm-query/` endpoint that AI agents will call.
 
 1.  Ensure your `.env` file is correctly set up with `GOOGLE_GEMINI_API_KEY`, `TAVILY_API_KEY`, and `SUBSCAN_API_KEY`.
-2.  Ensure the `polkaquery_tool_definitions/` directory has been populated by `api_spec_parser.py`.
-3.  From the project root (`polkaquery_project_root/`), run:
+2.  From the project root (`polkaquery_project_root/`), run:
     ```bash
-    uvicorn polkaquery.main:app --reload --port 8000
+    uvicorn polkaquery.main:app --reload --port 8000 --env-file .env
     ```
-    The server should start and be accessible at `http://127.0.0.1:8000`. You'll see startup logs indicating if API keys and tool definitions were loaded.
+    The server should start and be accessible at `http://127.0.0.1:8000`. Using the `--env-file` flag is the recommended way to ensure all environment variables, including those for LangSmith, are loaded correctly before the application starts.
+
+### Clearing the Query Cache (For Testing)
+
+Polkaquery uses an in-memory cache for API responses and LLM decisions to speed up repeated queries. Because this cache is in-memory, it is automatically cleared every time you restart the FastAPI server.
+
+**To clear the cache, simply stop and restart the `uvicorn` server process.** This is the easiest way to ensure you are getting fresh, non-cached results when testing.
 
 ### Step 3: Run Integration Examples
 
@@ -176,7 +189,7 @@ This example shows a more direct interaction with a locally hosted LLM (via Olla
 ### Polkaquery FastAPI Server Logs
 
 * When the FastAPI server starts, it will print warnings if API keys (`GOOGLE_GEMINI_API_KEY`, `SUBSCAN_API_KEY`, `TAVILY_API_KEY`) are missing.
-* It will also log the number of Subscan tool definitions loaded from the `polkaquery_tool_definitions/` directory.
+* It will also log the number of Subscan tool definitions loaded from the `polkaquery_tool_definitions/subscan` directory.
 * When a query is made to `/llm-query/`, the server logs will show:
     * `DEBUG [main._process_llm_query_logic]: Raw query='...' Network='...'`
     * `DEBUG [gemini_recognizer]: LLM selected tool='...', params={...}` (from the first LLM call for tool selection)
@@ -187,7 +200,7 @@ This example shows a more direct interaction with a locally hosted LLM (via Olla
 
 ### Tool Definition Files
 
-* The `polkaquery_tool_definitions/` directory will contain `.json` files, one for each Subscan API endpoint successfully parsed by `api_spec_parser.py`.
+* The `polkaquery_tool_definitions/subscan` directory will contain `.json` files, one for each Subscan API endpoint successfully parsed by `api_spec_parser.py`.
 * Each JSON file describes a tool: its `name`, `description`, `api_path`, `api_method`, and `parameters` schema. This is what the `gemini_recognizer.py` loads to inform the LLM about available Subscan tools.
 
 ### Langchain Client Output (`langchain_output.txt`)
@@ -216,7 +229,33 @@ The `images/` directory contains screenshots illustrating example interactions:
 
 These visual aids can help in understanding the expected request/response formats and the flow of information.
 
+## Agent Integrations
+
+### MCP (Multi-Chain Agent Protocol) Integration
+
+Polkaquery now supports MCP, allowing it to be used as a standard tool by other compliant AI agents in the Polkadot ecosystem.
+
+*   **Tool Specification:** The tool's capabilities are described in the `mcp_tool_spec.json` file in the project root. This file can be served to other agents to allow them to automatically discover and configure Polkaquery.
+*   **Endpoint:** The MCP-compliant endpoint is available at `POST /mcp/v1/query`.
+
+#### Example Usage with Postman
+
+You can test the MCP endpoint using a graphical API client like Postman:
+
+1.  **Method:** `POST`
+2.  **URL:** `http://127.0.0.1:8000/mcp/v1/query`
+3.  **Headers:** Set `Content-Type` to `application/json`.
+4.  **Body:** Select the `raw` JSON option and enter the following payload:
+
+```json
+{
+  "query": "What is the total issuance of DOT?",
+  "network": "polkadot"
+}
+```
+
 ## Future Enhancements (Roadmap Ideas)
+
 
 * **Agentic Multi-Step Reasoning:** Implement a more advanced agentic loop in `main.py` to allow Polkaquery to make multiple tool calls sequentially to answer complex queries.
 * **Expanded Toolset:** Parse and integrate all available Subscan API endpoints.
@@ -226,6 +265,10 @@ These visual aids can help in understanding the expected request/response format
 * **User Authentication & Rate Limiting:** For a publicly hosted API.
 * **Streaming Responses:** For a more interactive experience with the LLM.
 * **More Sophisticated Error Handling:** Allow the agent/LLM to retry failed tool calls or ask for user clarification.
+* **MCP server integration:** Integrate with the MCP server to allow Polkaquery to serve as a tool for other agents in the Polkadot ecosystem. A natural extension of this would be to allow Polkaquery to be used as a tool for other agents in the Polkadot ecosystem, such as those built with MCP.
+
+## Future Enhancements (Code Refactoring)
+* **Prompt and tool initialization** As tooling support grow: shift loading of prompt and tools into a separate module to improve maintainability + rename tool definition directories to reflect their purpose (e.g., `subscan_tools/`).
 
 ## Contributing
 

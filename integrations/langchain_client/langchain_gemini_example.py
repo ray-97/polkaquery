@@ -168,6 +168,8 @@ def run_gemini_langchain_interaction():
     queries_with_network = [
         ("What is the balance of 13Z7KjGnzdAdMre9cqRwTZHR6F2p36gqBsaNmQwwosiPz8JT as of block 26100918?", "polkadot"),
         ("What is Polkadot 2.0 about?", "polkadot"),
+        ("What are the details for asset 1984 on AssetHub?", "assethub-polkadot-rpc"), # assets.asset
+        ("Get the class info for collection 5 on AssetHub.", "assethub-polkadot-rpc"), # unique.class
     ]
 
     for q, net in queries_with_network:

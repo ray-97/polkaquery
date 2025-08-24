@@ -42,7 +42,7 @@ def format_timestamp(unix_timestamp: int | None) -> str:
     except (ValueError, TypeError):
         return "Invalid Timestamp"
 
-def format_response_for_llm(intent_tool_name: str, subscan_data: dict, network_name: str, decimals: int, symbol: str, original_params: dict = None) -> dict:
+def format_subscan_response_for_llm(intent_tool_name: str, subscan_data: dict, network_name: str, decimals: int, symbol: str, original_params: dict = None) -> dict:
     """
     Pre-formats the raw JSON data from Subscan into a structured dictionary
     intended to be used as input for a final LLM answer synthesis step.
@@ -190,5 +190,63 @@ def format_response_for_llm(intent_tool_name: str, subscan_data: dict, network_n
         output["summary"] = f"An error occurred while formatting the data for '{intent_tool_name}'."
         output["key_data"] = {"formatter_error": str(e)}
         # output["raw_data_snippet"] = json.dumps(subscan_data)[:500] + "..." # Provide raw data on formatter error
+
+    return output
+
+def format_assethub_response_for_llm(api_response: dict, intent_tool_name: str, network_name: str) -> dict:
+    """
+    Formats the raw response from an AssetHub RPC query into a structured
+    dictionary suitable for the final LLM prompt.
+
+    Args:
+        api_response: The raw dictionary returned by the RPC client.
+        intent_tool_name: The name of the tool that was called.
+        network_name: The name of the network queried (e.g., 'assethub-polkadot-rpc').
+
+    Returns:
+        A dictionary summarizing the data.
+    """
+    output = {
+        "intent_processed": intent_tool_name,
+        "network": network_name,
+        "status": "success",
+        "summary": "",
+        "key_data": {},
+        "raw_data_snippet": None
+    }
+
+    if not api_response:
+        output["status"] = "error"
+        output["summary"] = f"No data was returned for the query '{intent_tool_name}'."
+        return output
+
+    if isinstance(api_response, dict) and "error" in api_response:
+        output["status"] = "error"
+        output["summary"] = f"An error occurred while querying AssetHub for '{intent_tool_name}': {api_response['error']}"
+        return output
+
+    # --- Data processing and summarization ---
+    output["key_data"] = api_response
+
+    # Helper function to create a clean string summary from the data
+    def create_summary(data):
+        if isinstance(data, dict):
+            # For dictionaries, create a key-value list
+            summary_parts = []
+            for key, value in data.items():
+                # Recursively format nested structures for readability
+                if isinstance(value, (dict, list)):
+                     summary_parts.append(f"{key}: (see nested data below)")
+                else:
+                     summary_parts.append(f"{key}: {value}")
+            return ", ".join(summary_parts)
+        elif isinstance(data, list):
+            return f"A list of {len(data)} items was returned."
+        else:
+            return str(data)
+
+    output["summary"] = f"Successfully retrieved data for '{intent_tool_name}'. {create_summary(api_response)}"
+    # Optionally, provide a snippet of the raw data if it's complex
+    output["raw_data_snippet"] = json.dumps(api_response, indent=2, default=str)[:1000]
 
     return output

@@ -24,6 +24,12 @@ SUPPORTED_NETWORKS = {
     "westend": {"base_url": "https://westend.api.subscan.io", "decimals": 12, "symbol": "WND"},
     "statemint": {"base_url": "https://statemint.api.subscan.io", "decimals": 10, "symbol": "DOT"}, # AssetHub Polkadot
     "statemine": {"base_url": "https://statemine.api.subscan.io", "decimals": 12, "symbol": "KSM"}, # AssetHub Kusama
-    # Add more networks as needed
+
+    "assethub-polkadot-rpc": {
+        "client": "rpc",
+        "ws_url": "wss://statemint.api.onfinality.io/public-ws",
+        "decimals": 10, 
+        "symbol": "DOT"
+    },
 }
 DEFAULT_NETWORK = "polkadot"

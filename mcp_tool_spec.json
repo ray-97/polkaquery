@@ -1,0 +1,45 @@
+{
+  "mcp_version": "1.0",
+  "name": "Polkaquery",
+  "description": "A natural language search engine for the Polkadot ecosystem. Can answer questions about on-chain data (balances, assets, NFTs, transactions) and general Polkadot concepts.",
+  "author": "Polkaquery Team",
+  "endpoints": [
+    {
+      "name": "query",
+      "description": "Submit a natural language query about the Polkadot ecosystem.",
+      "path": "/mcp/v1/query",
+      "method": "POST",
+      "request": {
+        "body": {
+          "content_type": "application/json",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "The natural language question to ask."
+              },
+              "network": {
+                "type": "string",
+                "description": "Optional. The specific network to target (e.g., \"polkadot\", \"kusama\"). Defaults to polkadot."
+              }
+            },
+            "required": ["query"]
+          }
+        }
+      },
+      "response": {
+        "content_type": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "answer": {
+              "type": "string",
+              "description": "The natural language answer to the query."
+            }
+          }
+        }
+      }
+    }
+  ]
+}

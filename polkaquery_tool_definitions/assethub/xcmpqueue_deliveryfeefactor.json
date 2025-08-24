@@ -1,0 +1,19 @@
+{
+    "name": "xcmpqueue_deliveryfeefactor",
+    "description": "The factor to multiply the base delivery fee by.",
+    "client_type": "rpc",
+    "pallet_name": "XcmpQueue",
+    "storage_item_name": "DeliveryFeeFactor",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

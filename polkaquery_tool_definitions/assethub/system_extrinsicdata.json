@@ -1,0 +1,19 @@
+{
+    "name": "system_extrinsicdata",
+    "description": "Extrinsics data for the current block (maps an extrinsic's index to its data).",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "ExtrinsicData",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

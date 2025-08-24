@@ -1,0 +1,19 @@
+{
+    "name": "system_eventtopics",
+    "description": "Mapping between a topic (represented by T::Hash) and a vector of indexes  of events in the `<Events<T>>` list.   All topic vectors have deterministic storage locations depending on the topic. This  allows light-clients to leverage the changes trie storage tracking mechanism and  in case of changes fetch the list of events of interest.   The value has the type `(BlockNumberFor<T>, EventIndex)` because if we used only just  the `EventIndex` then in case if the topic has the same contents on the next block  no notification will be triggered thus the event might be lost.",
+    "client_type": "rpc",
+    "pallet_name": "System",
+    "storage_item_name": "EventTopics",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "string",
+                "description": "Parameter of type scale_info::13"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

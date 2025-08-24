@@ -1,0 +1,12 @@
+{
+    "name": "session_validators",
+    "description": "The current set of validators.",
+    "client_type": "rpc",
+    "pallet_name": "Session",
+    "storage_item_name": "Validators",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

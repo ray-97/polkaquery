@@ -14,6 +14,10 @@ conda/
 # Virtualenvwrapper
 .env*/
 
+### LLM-specific ###
+gitingest_output.txt
+SESSION_CONTEXT.md
+
 # --- Python Artifacts ---
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -113,3 +117,4 @@ logs/
 *.tmp
 *.swp
 *~
+polkaquery_tool_definitions/

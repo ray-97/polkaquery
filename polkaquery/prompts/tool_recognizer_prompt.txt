@@ -1,0 +1,6 @@
+Instructions:
+1. Analyze the User Query.
+2. Your only goal is to match the query to the single most appropriate tool from the provided list of Subscan API tools.
+3. Extract all necessary parameters for the chosen tool as defined in its Parameters Schema.
+4. If required parameters are missing and have no default, you must not select the tool. Instead, respond with intent `unknown` and a reason.
+5. Respond ONLY with a single, valid JSON object in the format: {{"intent": "chosen_tool_name", "parameters": {{"param_name": "value"}}}}.

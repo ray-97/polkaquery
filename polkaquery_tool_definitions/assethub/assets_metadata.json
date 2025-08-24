@@ -1,0 +1,19 @@
+{
+    "name": "assets_metadata",
+    "description": "Metadata of an asset.",
+    "client_type": "rpc",
+    "pallet_name": "Assets",
+    "storage_item_name": "Metadata",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

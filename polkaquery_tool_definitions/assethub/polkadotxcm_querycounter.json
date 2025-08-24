@@ -1,0 +1,12 @@
+{
+    "name": "polkadotxcm_querycounter",
+    "description": "The latest available query index.",
+    "client_type": "rpc",
+    "pallet_name": "PolkadotXcm",
+    "storage_item_name": "QueryCounter",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

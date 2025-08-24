@@ -1,0 +1,19 @@
+{
+    "name": "nfts_ownershipacceptance",
+    "description": "The collection, if any, of which an account is willing to take ownership.",
+    "client_type": "rpc",
+    "pallet_name": "Nfts",
+    "storage_item_name": "OwnershipAcceptance",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "string",
+                "description": "Parameter of type AccountId"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

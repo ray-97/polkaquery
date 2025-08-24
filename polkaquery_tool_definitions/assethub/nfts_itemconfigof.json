@@ -1,0 +1,24 @@
+{
+    "name": "nfts_itemconfigof",
+    "description": "Config of an item.",
+    "client_type": "rpc",
+    "pallet_name": "Nfts",
+    "storage_item_name": "ItemConfigOf",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            },
+            "key2": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            }
+        },
+        "required": [
+            "key1",
+            "key2"
+        ]
+    }
+}

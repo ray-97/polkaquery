@@ -1,0 +1,12 @@
+{
+    "name": "parachainsystem_customvalidationheaddata",
+    "description": "A custom head data that should be returned as result of `validate_block`.   See `Pallet::set_custom_validation_head_data` for more information.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "CustomValidationHeadData",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

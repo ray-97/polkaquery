@@ -1,0 +1,19 @@
+{
+    "name": "uniques_class",
+    "description": "Details of a collection.",
+    "client_type": "rpc",
+    "pallet_name": "Uniques",
+    "storage_item_name": "Class",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "key1": {
+                "type": "integer",
+                "description": "Parameter of type u32"
+            }
+        },
+        "required": [
+            "key1"
+        ]
+    }
+}

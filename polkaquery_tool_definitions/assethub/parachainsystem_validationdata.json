@@ -1,0 +1,12 @@
+{
+    "name": "parachainsystem_validationdata",
+    "description": "The [`PersistedValidationData`] set for this block.  This value is expected to be set only once per block and it's never stored  in the trie.",
+    "client_type": "rpc",
+    "pallet_name": "ParachainSystem",
+    "storage_item_name": "ValidationData",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}

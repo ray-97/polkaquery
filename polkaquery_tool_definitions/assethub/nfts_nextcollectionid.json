@@ -1,0 +1,12 @@
+{
+    "name": "nfts_nextcollectionid",
+    "description": "Stores the `CollectionId` that is going to be used for the next collection.  This gets incremented whenever a new collection is created.",
+    "client_type": "rpc",
+    "pallet_name": "Nfts",
+    "storage_item_name": "NextCollectionId",
+    "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+    }
+}
