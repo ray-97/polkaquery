@@ -14,268 +14,116 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import json
-import traceback
-import asyncio
 from contextlib import asynccontextmanager
-
 from fastapi import FastAPI, HTTPException, Body
-from substrateinterface import SubstrateInterface
-import httpx
+from pydantic import BaseModel, Field
 
 from polkaquery.config import settings
 from polkaquery.core.resource_manager import ResourceManager
-from polkaquery.core.network_config import SUPPORTED_NETWORKS, DEFAULT_NETWORK
-from polkaquery.core.formatter import format_subscan_response_for_llm, format_assethub_response_for_llm
-from polkaquery.data_sources.subscan_client import call_subscan_api
-from polkaquery.data_sources.assethub_rpc_client import execute_assethub_rpc_query
-from polkaquery.intent_recognition.llm_based.gemini_recognizer import recognize_intent_with_gemini_llm
-from polkaquery.routing import route_query_with_llm
-from polkaquery.core.async_cache import async_cached, api_cache
+from polkaquery.core.network_config import DEFAULT_NETWORK
 
 # --- Global Resource Manager ---
 # This single instance will be used throughout the application's lifecycle.
+# It holds the compiled LangGraph app and all necessary clients and resources.
 resource_manager = ResourceManager(settings=settings)
 # ---
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
     Handles application startup and shutdown events.
-    Initializes resources on startup and cleans them up on shutdown.
     """
     print("INFO: Polkaquery application starting up...")
-    # On startup, trigger the ResourceManager to load/generate all tools.
     await resource_manager.load_tools()
+    # The graph is built in the ResourceManager constructor, so it's ready now.
     print(f"INFO: Tool loading complete. Subscan tools: {len(resource_manager.subscan_tools)}, AssetHub tools: {len(resource_manager.assethub_tools)}.")
-    
     yield
-    
-    # --- Shutdown ---
     print("INFO: Polkaquery application shutting down...")
     await resource_manager.shutdown()
 
-
 app = FastAPI(
-    title="Polkaquery LLM",
-    description="Polkadot ecosystem search via Subscan & Internet, LLM-driven.",
-    version="0.7.0 (Refactored)", 
+    title="Polkaquery Agent",
+    description="Polkadot ecosystem search agent powered by LangGraph.",
+    version="0.9.0 (LangGraph)", 
     lifespan=lifespan 
 )
 
-@async_cached(api_cache)
-async def perform_internet_search(search_query: str) -> dict:
+class FeedbackModel(BaseModel):
+    run_id: str = Field(..., description="The unique run ID from the /llm-query/ response.")
+    score: int = Field(..., description="The feedback score, e.g., 1 for positive, 0 for negative.")
+    key: str = Field("user-rating", description="The feedback key or category.")
+
+@app.post("/feedback")
+async def handle_feedback(feedback: FeedbackModel):
     """
-    Performs an internet search using the Tavily client from the ResourceManager.
+    Receives user feedback and logs it to LangSmith.
     """
-    print(f"INFO [main.perform_internet_search]: Performing internet search for: '{search_query}'")
-    tavily_client = resource_manager.tavily_client
-    
-    if tavily_client:
-        try:
-            print(f"INFO [main.perform_internet_search]: Using TavilyClient to search for: {search_query}")
-            response_dict = tavily_client.search(query=search_query, search_depth="advanced", max_results=3, include_answer=True)
-            return {
-                "code": 0,
-                "message": "Tavily search successful",
-                "data": {
-                    "search_provider": "Tavily",
-                    "query_used": search_query,
-                    "answer_summary": response_dict.get("answer"),
-                    "results": response_dict.get("results", [])
-                }
-            }
-        except Exception as e:
-            print(f"ERROR [main.perform_internet_search]: Tavily search failed: {e}")
-            traceback.print_exc()
-            return {"code": -1, "message": f"Internet search with Tavily failed: {str(e)}", "data": None}
-    else:
-        print("WARN [main.perform_internet_search]: Tavily client not configured. Returning placeholder.")
-        return {
-            "code": 0, 
-            "message": "Placeholder Internet Search", 
-            "data": {
-                "search_provider": "Placeholder",
-                "query_used": search_query,
-                "results": [{"title": "Placeholder Search Result", "content": "Tavily client is not configured."}]
-            }
-        }
-
-async def generate_final_llm_answer(original_query: str, network_context: str, processed_data: dict, source_type: str) -> str:
-    """
-    Synthesizes a final natural language answer using the Gemini model from the ResourceManager.
-    """
-    model = resource_manager.gemini_model
-    if not model:
-        return "Error: Google Gemini model is not available or configured."
-
-    data_summary_for_prompt = json.dumps(processed_data, indent=2)
-    if len(data_summary_for_prompt) > 25000: 
-        data_summary_for_prompt = data_summary_for_prompt[:25000] + "\n... (data truncated)"
-
-    prompt = resource_manager.final_answer_prompt.format(
-        original_query=original_query,
-        network_context=network_context,
-        source_type=source_type,
-        data_summary_for_prompt=data_summary_for_prompt
-    )
-    try:
-        response = await model.generate_content_async(prompt)
-        return response.text.strip()
-    except Exception as e:
-        print(f"ERROR [main.generate_final_llm_answer]: Final LLM answer synthesis failed: {e}")
-        traceback.print_exc()
-        return f"Could not generate a natural language summary. Raw data: {data_summary_for_prompt}"
-
-async def generate_error_explanation_with_llm(original_query: str, tool_name: str, params: dict, error_message: str) -> str:
-    """
-    Uses the LLM to translate a technical API error into a user-friendly explanation.
-    """
-    model = resource_manager.gemini_model
-    if not model:
-        return "An error occurred, and the assistant required to explain it is also unavailable."
-
-    prompt = resource_manager.error_translator_prompt.format(
-        original_query=original_query,
-        tool_name=tool_name,
-        parameters=json.dumps(params),
-        error_message=error_message
-    )
-    try:
-        response = await model.generate_content_async(prompt)
-        return response.text.strip()
-    except Exception as e:
-        print(f"ERROR [main.generate_error_explanation_with_llm]: LLM error explanation failed: {e}")
-        # Fallback to a simpler, generic error message if the explanation generator fails
-        return "An error occurred with the data provider. Please check your parameters and try again."
-
-async def _process_llm_query_logic(raw_query: str, network_name_input: str):
-    processed_data_for_final_llm = None
-    data_source_type = "Unknown"
-    selected_intent_tool_name = "N/A"
-
-    try:
-        # Step 1: Use the LLM Router to decide the data source
-        chosen_route = await route_query_with_llm(
-            query=raw_query,
-            model=resource_manager.gemini_model,
-            prompt_template=resource_manager.router_prompt
+    langsmith_client = resource_manager.langsmith_client
+    if not langsmith_client:
+        raise HTTPException(
+            status_code=503,
+            detail="Feedback system is not configured. LANGCHAIN_API_KEY may be missing."
         )
-        print(f"DEBUG [main._process_llm_query_logic]: LLM-Router chose route: '{chosen_route}'")
-
-        # Step 2: Execute based on the chosen route
-        if chosen_route == "internet_search":
-            data_source_type = "InternetSearch"
-            # For internet search, we can bypass the tool recognizer and call it directly.
-            # The search query can be the raw query itself.
-            selected_intent_tool_name = "internet_search"
-            api_response_json = await perform_internet_search(raw_query)
-            processed_data_for_final_llm = format_subscan_response_for_llm(
-                selected_intent_tool_name, api_response_json, network_name_input, 0, "", {"search_query": raw_query}
-            )
-
-        else: # This handles 'subscan' and 'assethub' routes
-            if chosen_route == 'assethub':
-                data_source_type = "AssetHub"
-                tools_for_llm = list(resource_manager.assethub_tools.values())
-                prompt_template = resource_manager.assethub_recognizer_prompt
-                network_name_lower = "assethub-polkadot-rpc"
-            else: # Default to subscan
-                data_source_type = "Subscan"
-                tools_for_llm = list(resource_manager.subscan_tools.values())
-                prompt_template = resource_manager.tool_recognizer_prompt
-                network_name_lower = network_name_input.lower()
-
-            # Step 2a: Use the Tool Recognizer LLM
-            intent_tool_name, params = await recognize_intent_with_gemini_llm(
-                query=raw_query, 
-                model=resource_manager.gemini_model,
-                available_tools=tools_for_llm,
-                prompt_template=prompt_template
-            )
-            selected_intent_tool_name = intent_tool_name
-            print(f"DEBUG [main._process_llm_query_logic]: Recognized intent/tool='{intent_tool_name}', params={params}")
-
-            if intent_tool_name == "unknown":
-                reason = params.get("reason", "Could not understand query.")
-                return {"answer": f"Sorry, I couldn't process that request. Reason: {reason}", "network": network_name_input, "debug_intent": intent_tool_name, "debug_params": params}
-
-            # Step 2b: Execute the chosen tool
-            if data_source_type == "AssetHub":
-                tool_def = resource_manager.assethub_tools.get(intent_tool_name)
-                if not tool_def: raise ValueError(f"Tool '{intent_tool_name}' not found in ResourceManager.")
-                # Run the synchronous, cached function in a thread to avoid blocking the event loop
-                api_response_json = await asyncio.to_thread(
-                    execute_assethub_rpc_query,
-                    substrate_client=resource_manager.assethub_rpc_client,
-                    tool_definition=tool_def,
-                    params=params
-                )
-                processed_data_for_final_llm = format_assethub_response_for_llm(
-                    api_response_json, intent_tool_name, params
-                )
-            else: # Subscan
-                tool_def = resource_manager.subscan_tools.get(intent_tool_name)
-                if not tool_def: raise ValueError(f"Tool '{intent_tool_name}' not found in ResourceManager.")
-                network_config = SUPPORTED_NETWORKS[network_name_lower]
-                api_response_json = await call_subscan_api(
-                    client=resource_manager.http_client,
-                    base_url=settings.subscan_base_url,
-                    tool_definition=tool_def,
-                    params=params,
-                    api_key=settings.subscan_api_key
-                )
-                processed_data_for_final_llm = format_subscan_response_for_llm(
-                    intent_tool_name, api_response_json, network_name_lower, 
-                    network_config["decimals"], network_config["symbol"], params
-                )
-
-        # Step 3: Generate Final Answer
-        final_answer = await generate_final_llm_answer(raw_query, network_name_input, processed_data_for_final_llm, data_source_type)
-
-        return {
-            "answer": final_answer,
-            "network": network_name_input,
-            "debug_intent": selected_intent_tool_name,
-            "debug_params": params,
-            "debug_formatted_data": processed_data_for_final_llm
-        }
-    except httpx.HTTPStatusError as e:
-        # Handle HTTP errors, especially 400 Bad Request from Subscan
-        if e.response.status_code == 400:
-            print(f"WARN [main._process_llm_query_logic]: Received 400 Bad Request for tool '{selected_intent_tool_name}'")
-            error_body = e.response.json()
-            api_error_message = error_body.get("message", "No specific error message provided.")
-            
-            # Call the LLM to translate the error into a user-friendly message
-            explanation = await generate_error_explanation_with_llm(
-                original_query=raw_query,
-                tool_name=selected_intent_tool_name,
-                params=getattr(e.request, 'content', b'').decode(), # Best effort to get params
-                error_message=api_error_message
-            )
-            return {"answer": explanation, "network": network_name_input}
-        else:
-            error_detail = f"A data provider returned an error (Status {e.response.status_code}). Please try again later."
-            return {"answer": error_detail, "network": network_name_input}
+    
+    try:
+        langsmith_client.create_feedback(
+            run_id=feedback.run_id,
+            key=feedback.key,
+            score=feedback.score
+        )
+        return {"status": "success", "message": "Feedback received. Thank you!"}
     except Exception as e:
-        traceback.print_exc()
-        # For any other exception, return a generic internal server error
-        return {"answer": f"An unexpected internal server error occurred processing tool '{selected_intent_tool_name}': {str(e)}", "network": network_name_input}
+        print(f"ERROR [main.handle_feedback]: Could not submit feedback to LangSmith: {e}")
+        raise HTTPException(status_code=500, detail="Failed to submit feedback.")
 
 @app.post("/llm-query/")
 async def handle_llm_query(query_body: dict = Body(...)):
+    """
+    Handles a natural language query by invoking the LangGraph agent.
+    """
     raw_query = query_body.get("query")
     if not raw_query:
         raise HTTPException(status_code=400, detail="Query field is missing.")
 
-    # Network name is still accepted but its primary role in routing is diminished.
-    # It's now mainly used for context with the Subscan client.
-    network_name_input = query_body.get("network", DEFAULT_NETWORK)
-    network_name_lower = network_name_input.lower()
-    if network_name_lower not in SUPPORTED_NETWORKS:
-        raise HTTPException(status_code=400, detail=f"Unsupported network: '{network_name_input}'. Supported: {list(SUPPORTED_NETWORKS.keys())}")
+    network = query_body.get("network", DEFAULT_NETWORK)
 
-    return await _process_llm_query_logic(raw_query, network_name_input)
+    # The initial state for the graph
+    initial_state = {
+        "query": raw_query,
+        "network": network,
+    }
 
+    # The configuration for the run, passing the resource manager to all nodes
+    config = {"configurable": {"resource_manager": resource_manager}}
+
+    try:
+        final_state = None
+        run_id = None
+        # Asynchronously stream the graph execution to get the final state
+        async for event in resource_manager.app.astream_events(initial_state, config=config, version="v1"):
+            # Capture the run_id from the first available event
+            if run_id is None and event.get("run_id"):
+                run_id = event.get("run_id")
+
+            # The "on_chain_end" event contains the final output of the graph
+            if event["event"] == "on_chain_end":
+                final_state = event["data"]["output"]
+
+        # The final state is a dictionary where keys are the names of the end nodes.
+        # We need to get the output from one of the possible end nodes.
+        answer_node_output = final_state.get("generate_answer") or final_state.get("handle_error")
+
+        if not answer_node_output or not answer_node_output.get("final_answer"):
+            print(f"ERROR [main]: Graph execution finished in an unexpected state: {final_state}")
+            raise HTTPException(status_code=500, detail="Graph execution finished without a final answer.")
+
+        # Return the final answer from the graph's state
+        return {
+            "answer": answer_node_output.get("final_answer"),
+            "network": network,
+            "run_id": run_id
+        }
+
+    except Exception as e:
+        # This is a fallback for unexpected errors during the graph execution itself
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred during graph execution: {e}")

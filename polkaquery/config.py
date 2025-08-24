@@ -37,6 +37,12 @@ class Settings(BaseSettings):
     # Filesystem Paths
     tools_output_directory: str = "polkaquery_tool_definitions"
 
+    # LangSmith Monitoring (Optional)
+    langchain_tracing_v2: str = Field("false", env="LANGCHAIN_TRACING_V2")
+    langchain_endpoint: str = Field("https://api.smith.langchain.com", env="LANGCHAIN_ENDPOINT")
+    langchain_api_key: str | None = Field(None, env="LANGCHAIN_API_KEY")
+    langchain_project: str | None = Field(None, env="LANGCHAIN_PROJECT")
+
     class Config:
         env_file = ".env"
         env_file_encoding = 'utf-8'

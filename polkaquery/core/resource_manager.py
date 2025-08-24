@@ -26,6 +26,13 @@ from polkaquery.config import Settings
 from polkaquery.providers.base import BaseToolProvider
 from polkaquery.providers.subscan import SubscanToolProvider
 from polkaquery.providers.assethub import AssetHubToolProvider
+from polkaquery.graph.builder import build_graph
+
+# Attempt to import LangSmith client
+try:
+    from langsmith import Client as LangSmithClient
+except ImportError:
+    LangSmithClient = None
 
 # Attempt to import TavilyClient
 try:
@@ -46,6 +53,7 @@ class ResourceManager:
         self._gemini_model: genai.GenerativeModel | None = None
         self._tavily_client: 'TavilyClient' | None = None
         self._assethub_rpc_client: SubstrateInterface | None = None
+        self._langsmith_client: 'LangSmithClient' | None = None
 
         # Tool providers are initialized here
         self.subscan_provider: BaseToolProvider = SubscanToolProvider(settings, self.http_client)
@@ -62,6 +70,9 @@ class ResourceManager:
         self.final_answer_prompt: str = ""
         self.error_translator_prompt: str = ""
         self._load_prompts()
+
+        # The compiled LangGraph app is built once on startup
+        self.app = build_graph()
 
     def _load_prompts(self):
         """Loads all prompt templates from the filesystem."""
@@ -138,6 +149,17 @@ class ResourceManager:
                 traceback.print_exc()
                 # We don't raise here, but the property will return None
         return self._assethub_rpc_client
+
+    @property
+    def langsmith_client(self) -> 'LangSmithClient | None':
+        """Provides a singleton instance of the LangSmith Client, if configured."""
+        if self._langsmith_client is None and LangSmithClient is not None and self.settings.langchain_api_key:
+            try:
+                self._langsmith_client = LangSmithClient(api_key=self.settings.langchain_api_key)
+                print("INFO [ResourceManager]: LangSmith Client initialized successfully.")
+            except Exception as e:
+                print(f"Warning [ResourceManager]: Failed to initialize LangSmith Client: {e}")
+        return self._langsmith_client
 
     async def shutdown(self):
         """Gracefully closes all open connections."""
