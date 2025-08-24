@@ -15,94 +15,113 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import pytest
-from unittest.mock import patch, MagicMock # For mocking TavilyClient
+import json
+from unittest.mock import AsyncMock, MagicMock
+# Import the cache object to clear it in tests
+from polkaquery.intent_recognition.llm_based.gemini_recognizer import recognize_intent_with_gemini_llm, llm_cache
 
-# The function to test is in main.py
-from polkaquery.main import perform_internet_search 
-
-@pytest.mark.asyncio
-async def test_perform_internet_search_with_tavily_success(monkeypatch):
-    search_query = "latest Polkadot updates"
-    mock_tavily_response = {
-        "query": search_query,
-        "answer": "Polkadot 2.0 is upcoming with new features.",
-        "results": [
-            {"title": "Polkadot 2.0 News", "url": "http://example.com/news1", "content": "Details about Polkadot 2.0..."},
-            {"title": "Polkadot Staking Changes", "url": "http://example.com/staking", "content": "Updates to staking..."}
-        ]
+# Sample data for testing
+SAMPLE_TOOLS = [
+    {
+        "name": "get_balance",
+        "description": "Get the balance of a given account address.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "address": {"type": "string", "description": "The account address."}
+            },
+            "required": ["address"]
+        }
+    },
+    {
+        "name": "internet_search",
+        "description": "Performs an internet search for a given query.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "The search query."}
+            },
+            "required": ["query"]
+        }
     }
+]
 
-    # Mock the TavilyClient instance and its search method
-    mock_tavily_client_instance = MagicMock()
-    mock_tavily_client_instance.search = MagicMock(return_value=mock_tavily_response)
+SAMPLE_PROMPT_TEMPLATE = "Please choose a tool based on the user query."
 
-    # Patch the tavily_client global in main.py
-    monkeypatch.setattr("polkaquery.main.tavily_client", mock_tavily_client_instance)
-    # Ensure TAVILY_API_KEY is perceived as set for this test path
-    monkeypatch.setenv("TAVILY_API_KEY", "fake_tavily_key")
+@pytest.fixture
+def mock_gemini_model():
+    """Provides a mock Gemini GenerativeModel for tests."""
+    model = MagicMock()
+    model.generate_content_async = AsyncMock()
+    return model
 
-
-    result = await perform_internet_search(search_query)
-
-    assert result["code"] == 0
-    assert result["message"] == "Tavily search successful"
-    assert result["data"]["search_provider"] == "Tavily"
-    assert result["data"]["query_used"] == search_query
-    assert result["data"]["answer_summary"] == "Polkadot 2.0 is upcoming with new features."
-    assert len(result["data"]["results"]) == 2
-    assert result["data"]["results"][0]["title"] == "Polkadot 2.0 News"
-    mock_tavily_client_instance.search.assert_called_once_with(query=search_query, search_depth="advanced", max_results=3, include_answer=True)
+@pytest.fixture(autouse=True)
+def clear_cache_before_test():
+    """Fixture to automatically clear the cache before each test run."""
+    llm_cache.clear()
 
 @pytest.mark.asyncio
-async def test_perform_internet_search_tavily_api_error(monkeypatch):
-    search_query = "another search"
+async def test_recognize_intent_success(mock_gemini_model):
+    """Tests successful recognition of a tool and its parameters."""
+    user_query = "What is the balance of address 12345?"
+    mock_llm_response = {"intent": "get_balance", "parameters": {"address": "12345"}}
     
-    mock_tavily_client_instance = MagicMock()
-    mock_tavily_client_instance.search = MagicMock(side_effect=Exception("Tavily API Error"))
+    mock_response_obj = MagicMock()
+    mock_response_obj.text = json.dumps(mock_llm_response)
+    mock_gemini_model.generate_content_async.return_value = mock_response_obj
 
-    monkeypatch.setattr("polkaquery.main.tavily_client", mock_tavily_client_instance)
-    monkeypatch.setenv("TAVILY_API_KEY", "fake_tavily_key")
+    intent, params = await recognize_intent_with_gemini_llm(
+        user_query, mock_gemini_model, SAMPLE_TOOLS, SAMPLE_PROMPT_TEMPLATE
+    )
 
-    result = await perform_internet_search(search_query)
-
-    assert result["code"] == -1
-    assert "Internet search with Tavily failed: Tavily API Error" in result["message"]
-    assert result["data"] is None
+    assert intent == "get_balance"
+    assert params == {"address": "12345"}
 
 @pytest.mark.asyncio
-async def test_perform_internet_search_no_tavily_client(monkeypatch):
-    search_query = "search without tavily"
-    
-    # Ensure tavily_client is None in main.py for this test
-    monkeypatch.setattr("polkaquery.main.tavily_client", None)
-    # Also simulate TAVILY_API_KEY not being set or client not imported
-    monkeypatch.setenv("TAVILY_API_KEY", "") 
-    monkeypatch.setattr("polkaquery.main.TavilyClient", None) # Simulate import failure
+async def test_recognize_intent_unknown_tool(mock_gemini_model):
+    """Tests handling of a response where the LLM chooses a non-existent tool."""
+    user_query = "some query for unknown tool"
+    mock_llm_response = {"intent": "non_existent_tool", "parameters": {}}
+    mock_response_obj = MagicMock()
+    mock_response_obj.text = json.dumps(mock_llm_response)
+    mock_gemini_model.generate_content_async.return_value = mock_response_obj
 
+    intent, params = await recognize_intent_with_gemini_llm(
+        user_query, mock_gemini_model, SAMPLE_TOOLS, SAMPLE_PROMPT_TEMPLATE
+    )
 
-    result = await perform_internet_search(search_query)
-
-    assert result["code"] == 0
-    assert result["message"] == "Placeholder Internet Search"
-    assert result["data"]["search_provider"] == "Placeholder"
-    assert result["data"]["query_used"] == search_query
-    assert "placeholder search result" in result["data"]["results"][0]["content"].lower()
+    assert intent == "unknown"
+    assert "LLM chose a non-existent tool" in params["reason"]
 
 @pytest.mark.asyncio
-async def test_perform_internet_search_no_tavily_api_key(monkeypatch):
-    search_query = "search with tavily lib but no key"
-    
-    monkeypatch.setattr("polkaquery.main.tavily_client", None) 
-    monkeypatch.setenv("TAVILY_API_KEY", "") 
-    monkeypatch.setattr("polkaquery.main.TavilyClient", MagicMock())
+async def test_recognize_intent_invalid_json(mock_gemini_model):
+    """Tests handling of a response with invalid JSON."""
+    user_query = "some query for invalid json"
+    mock_response_obj = MagicMock()
+    mock_response_obj.text = "this is not valid json"
+    mock_gemini_model.generate_content_async.return_value = mock_response_obj
 
-    result = await perform_internet_search(search_query)
+    intent, params = await recognize_intent_with_gemini_llm(
+        user_query, mock_gemini_model, SAMPLE_TOOLS, SAMPLE_PROMPT_TEMPLATE
+    )
 
-    assert result["code"] == 0
-    assert result["message"] == "Placeholder Internet Search"
-    
-    # Make assertions case-insensitive to be more robust
-    content_lower = result["data"]["results"][0]["content"].lower()
-    assert "placeholder search result" in content_lower
-    assert "tavily client is not configured" in content_lower
+    assert intent == "unknown"
+    assert "was not valid JSON" in params["reason"]
 
+@pytest.mark.asyncio
+async def test_recognize_intent_missing_required_param(mock_gemini_model):
+    """Tests that the function correctly identifies when a required parameter is missing."""
+    user_query = "Get the balance"
+    mock_llm_response = {"intent": "get_balance", "parameters": {}}
+    mock_response_obj = MagicMock()
+    mock_response_obj.text = json.dumps(mock_llm_response)
+    mock_gemini_model.generate_content_async.return_value = mock_response_obj
+
+    intent, params = await recognize_intent_with_gemini_llm(
+        user_query, mock_gemini_model, SAMPLE_TOOLS, SAMPLE_PROMPT_TEMPLATE
+    )
+
+    assert intent == "unknown"
+    # Corrected assertion to match the actual, more detailed error message
+    assert "did not extract required parameters" in params["reason"]
+    assert "address" in params["reason"]
