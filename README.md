@@ -130,9 +130,9 @@ The Polkaquery server provides the `/llm-query/` endpoint that AI agents will ca
 1.  Ensure your `.env` file is correctly set up with `GOOGLE_GEMINI_API_KEY`, `TAVILY_API_KEY`, and `SUBSCAN_API_KEY`.
 2.  From the project root (`polkaquery_project_root/`), run:
     ```bash
-    uvicorn polkaquery.main:app --reload --port 8000
+    uvicorn polkaquery.main:app --reload --port 8000 --env-file .env
     ```
-    The server should start and be accessible at `http://127.0.0.1:8000`. You'll see startup logs indicating the tool generation or loading process.
+    The server should start and be accessible at `http://127.0.0.1:8000`. Using the `--env-file` flag is the recommended way to ensure all environment variables, including those for LangSmith, are loaded correctly before the application starts.
 
 ### Clearing the Query Cache (For Testing)
 
