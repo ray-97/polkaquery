@@ -60,6 +60,7 @@ class ResourceManager:
         self.tool_recognizer_prompt: str = ""
         self.assethub_recognizer_prompt: str = ""
         self.final_answer_prompt: str = ""
+        self.error_translator_prompt: str = ""
         self._load_prompts()
 
     def _load_prompts(self):
@@ -71,6 +72,7 @@ class ResourceManager:
             self.tool_recognizer_prompt = (prompt_dir / "tool_recognizer_prompt.txt").read_text()
             self.assethub_recognizer_prompt = (prompt_dir / "assethub_recognizer_prompt.txt").read_text()
             self.final_answer_prompt = (prompt_dir / "final_answer_prompt.txt").read_text()
+            self.error_translator_prompt = (prompt_dir / "error_translator_prompt.txt").read_text()
             print("INFO [ResourceManager]: All prompts loaded successfully.")
         except FileNotFoundError as e:
             print(f"ERROR [ResourceManager]: Prompt file not found: {e}. The application may not function correctly.")

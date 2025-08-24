@@ -128,6 +128,28 @@ async def generate_final_llm_answer(original_query: str, network_context: str, p
         traceback.print_exc()
         return f"Could not generate a natural language summary. Raw data: {data_summary_for_prompt}"
 
+async def generate_error_explanation_with_llm(original_query: str, tool_name: str, params: dict, error_message: str) -> str:
+    """
+    Uses the LLM to translate a technical API error into a user-friendly explanation.
+    """
+    model = resource_manager.gemini_model
+    if not model:
+        return "An error occurred, and the assistant required to explain it is also unavailable."
+
+    prompt = resource_manager.error_translator_prompt.format(
+        original_query=original_query,
+        tool_name=tool_name,
+        parameters=json.dumps(params),
+        error_message=error_message
+    )
+    try:
+        response = await model.generate_content_async(prompt)
+        return response.text.strip()
+    except Exception as e:
+        print(f"ERROR [main.generate_error_explanation_with_llm]: LLM error explanation failed: {e}")
+        # Fallback to a simpler, generic error message if the explanation generator fails
+        return "An error occurred with the data provider. Please check your parameters and try again."
+
 async def _process_llm_query_logic(raw_query: str, network_name_input: str):
     processed_data_for_final_llm = None
     data_source_type = "Unknown"
@@ -216,11 +238,30 @@ async def _process_llm_query_logic(raw_query: str, network_name_input: str):
             "answer": final_answer,
             "network": network_name_input,
             "debug_intent": selected_intent_tool_name,
-            "debug_params": getattr(selected_intent_tool_name, 'params', {}),
+            "debug_params": params,
             "debug_formatted_data": processed_data_for_final_llm
         }
+    except httpx.HTTPStatusError as e:
+        # Handle HTTP errors, especially 400 Bad Request from Subscan
+        if e.response.status_code == 400:
+            print(f"WARN [main._process_llm_query_logic]: Received 400 Bad Request for tool '{selected_intent_tool_name}'")
+            error_body = e.response.json()
+            api_error_message = error_body.get("message", "No specific error message provided.")
+            
+            # Call the LLM to translate the error into a user-friendly message
+            explanation = await generate_error_explanation_with_llm(
+                original_query=raw_query,
+                tool_name=selected_intent_tool_name,
+                params=getattr(e.request, 'content', b'').decode(), # Best effort to get params
+                error_message=api_error_message
+            )
+            return {"answer": explanation, "network": network_name_input}
+        else:
+            error_detail = f"A data provider returned an error (Status {e.response.status_code}). Please try again later."
+            return {"answer": error_detail, "network": network_name_input}
     except Exception as e:
         traceback.print_exc()
+        # For any other exception, return a generic internal server error
         return {"answer": f"An unexpected internal server error occurred processing tool '{selected_intent_tool_name}': {str(e)}", "network": network_name_input}
 
 @app.post("/llm-query/")
