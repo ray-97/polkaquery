@@ -15,7 +15,7 @@ conda/
 .env*/
 
 ### LLM-specific ###
-gitingest_output.txt
+gitingest.txt
 SESSION_CONTEXT.md
 
 # --- Python Artifacts ---
