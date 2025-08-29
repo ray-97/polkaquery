@@ -134,10 +134,11 @@ async def handle_error(state: GraphState, config: dict) -> dict:
     """Generates a user-friendly explanation for an error."""
     print("---NODE: handle_error---")
     rm = config["configurable"]["resource_manager"]
-    final_answer = await generate_error_explanation_with_llm(
+    explanation = await generate_error_explanation_with_llm(
         rm,
         original_query=state["query"],
         tool_name=state["tool_name"],
         params=state["tool_params"],
         error_message=state["error_message"]
     )
+    return {"final_answer": explanation}
