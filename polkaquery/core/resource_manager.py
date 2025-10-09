@@ -115,7 +115,7 @@ class ResourceManager:
             if self.settings.google_gemini_api_key:
                 try:
                     genai.configure(api_key=self.settings.google_gemini_api_key)
-                    self._gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+                    self._gemini_model = genai.GenerativeModel('gemini-flash-latest')
                     print("INFO [ResourceManager]: Google Gemini API configured successfully.")
                 except Exception as e:
                     print(f"ERROR [ResourceManager]: Failed to configure Gemini API: {e}")
