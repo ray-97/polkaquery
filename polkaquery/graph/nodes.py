@@ -31,10 +31,9 @@ from polkaquery.core.network_config import SUPPORTED_NETWORKS
 # Each function takes the current state and a config object as input
 # and returns a dictionary with the fields to update in the state.
 
-@traceable
+# @traceable
 async def route_query(state: GraphState, config: dict) -> dict:
     """Determines the best data source (route) for the user's query."""
-    print("---NODE: route_query---")
     rm = config["configurable"]["resource_manager"]
     chosen_route = await route_query_with_llm(
         query=state["query"],
@@ -43,10 +42,9 @@ async def route_query(state: GraphState, config: dict) -> dict:
     )
     return {"route": chosen_route}
 
-@traceable
+# @traceable
 async def recognize_tool(state: GraphState, config: dict) -> dict:
     """Recognizes the specific tool and parameters to use based on the chosen route."""
-    print(f"---NODE: recognize_tool (Route: {state['route']})---")
     rm = config["configurable"]["resource_manager"]
     if state['route'] == 'assethub':
         tools = list(rm.assethub_tools.values())
@@ -63,10 +61,9 @@ async def recognize_tool(state: GraphState, config: dict) -> dict:
     )
     return {"tool_name": tool_name, "tool_params": params}
 
-@traceable
+# @traceable
 async def execute_tool(state: GraphState, config: dict) -> dict:
     """Executes the chosen tool with the extracted parameters."""
-    print(f"---NODE: execute_tool (Tool: {state['tool_name']})---")
     rm = config["configurable"]["resource_manager"]
     route = state["route"]
     tool_name = state["tool_name"]
@@ -106,19 +103,17 @@ async def execute_tool(state: GraphState, config: dict) -> dict:
 
     return {"api_response": api_response, "error_message": error_message}
 
-@traceable
+# @traceable
 async def format_response(state: GraphState, config: dict) -> dict:
     """Formats the successful API response into a digestible summary for the final LLM call."""
-    print("---NODE: format_response---")
     # This node is a placeholder for now, as the final answer generation
     # can often directly handle the raw JSON. For more complex formatting,
     # this is where the logic from core/formatter.py would be integrated.
     return {}
 
-@traceable
+# @traceable
 async def generate_answer(state: GraphState, config: dict) -> dict:
     """Generates the final, user-facing natural language answer."""
-    print("---NODE: generate_answer---")
     rm = config["configurable"]["resource_manager"]
     final_answer = await generate_final_llm_answer(
         rm,
@@ -129,10 +124,9 @@ async def generate_answer(state: GraphState, config: dict) -> dict:
     )
     return {"final_answer": final_answer}
 
-@traceable
+# @traceable
 async def handle_error(state: GraphState, config: dict) -> dict:
     """Generates a user-friendly explanation for an error."""
-    print("---NODE: handle_error---")
     rm = config["configurable"]["resource_manager"]
     explanation = await generate_error_explanation_with_llm(
         rm,
